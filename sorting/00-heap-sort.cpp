@@ -41,6 +41,15 @@ void createHeap(int * heap, int len)
 	}
 }
 
+void heapSort(int * heap, int len)
+{
+	for (int i = len -1; i > 0; --i)
+	{
+		swap(heap, 0, i);
+		heapify(heap, 0, i);
+	}
+}
+
 int main(int argc, char const *argv[])
 {
 	int arr[] = {1, 2, 7, 4, 9, 8, 0, 3, 5, 6};
@@ -62,6 +71,11 @@ int main(int argc, char const *argv[])
 	cout << endl;
 	createHeap(brr, len);
 	for (auto ele : brr) {
+		cout << ele << "\t";
+	}
+	heapSort(brr, len);
+	cout << "\nafter heap sort \n";
+	for (auto ele: brr) {
 		cout << ele << "\t";
 	}
 	return 0;
