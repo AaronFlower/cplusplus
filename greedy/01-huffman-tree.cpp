@@ -12,7 +12,7 @@ class MinHeap
 {
 	friend ostream & operator << (ostream & os, const MinHeap & heap);
 public:
-	MinHeap();
+	MinHeap(){};
 	MinHeap(char * chars, int * freq, int len);
 	~MinHeap();
 	HeapNode extract();
@@ -38,7 +38,7 @@ private:
 	};
 	// 最后一个非叶子节点。
 	int lastNoneLeaf() {
-		return parent(size - 1);
+		return parent(size - 2);
 	};
 	void swap(int nodeIndex1, int nodeIndex2)
 	{
@@ -49,16 +49,30 @@ private:
 		nodes[nodeIndex2].freq = tmpNode.freq;
 	};
 
+	/**
+	 * 与 vector 类似，当容量不足时扩充到当前 size 的两倍。
+	 */
+	void reallocateHeap()
+	{
+		capicity = size * 2;
+		HeapNode * newNodes = new HeapNode[size * 2];
+		memcpy(newNodes, nodes, sizeof(HeapNode) * size);
+		delete [] nodes; // 释放之前分配的内存。
+		nodes = newNodes; // 赋予新的内存。
+	}
+
 public:
 	int size = 0;
 private:
 	HeapNode * nodes = nullptr;
+	int capicity = 0; // 和 vector 的 capicity 分配方式一样。
 };
 
 MinHeap::MinHeap(char * chars, int * freq, int len)
 {
 	size = len;
-	nodes = new HeapNode[len];
+	capicity = len * 2;
+	nodes = new HeapNode[capicity];
 	for (int i = 0; i < len; ++i)
 	{
 		nodes[i].value = chars[i];
@@ -85,6 +99,9 @@ void MinHeap::createMinHeap()
 	}
 }
 
+/**
+ * 递归最小堆调整。
+ */
 void MinHeap::minHeapify(int nodeIndex)
 {
 	int leftIndex = left(nodeIndex);
@@ -107,8 +124,31 @@ void MinHeap::minHeapify(int nodeIndex)
 	}
 }
 
+/**
+ * 最小堆插入实现：直接将元素插入到数据最后。然后次调整父结点，直到满足最小堆的性质。
+ */
+void MinHeap::insert(HeapNode node)
+{
+	if (size >= capicity) {
+		reallocateHeap();
+	}
+	++size;
+	nodes[size - 1] = node;
+	int nodeIndex = size -1;
+	int parentIndex = parent(size -1);
+	while(nodeIndex != 0 && nodes[nodeIndex].freq < nodes[parentIndex].freq) {
+		swap(nodeIndex, parentIndex);
+		nodeIndex = parentIndex;
+		parentIndex = parent(nodeIndex);
+	}
+}
+
+/**
+ * friend method operator overload.
+ */
 ostream & operator << (ostream & os, const MinHeap & minHeap)
 {
+	cout << "Heap info, capicity: " << minHeap.capicity << ", size : " << minHeap.size << endl;
 	for (int i = 0; i < minHeap.size; ++i)
 	{
 		cout << minHeap.nodes[i].value << "(" << minHeap.nodes[i].freq << ")" << "\t";
@@ -120,10 +160,16 @@ ostream & operator << (ostream & os, const MinHeap & minHeap)
 int main(int argc, char const *argv[])
 {
 	int freq[] = {9, 5, 12, 16, 13, 45};
-	char chars[] = {'b', 'a', 'c', 'e', 'c', 'f'};
+	char chars[] = {'b', 'a', 'c', 'e', 'c', 'f'};	
 	int len = sizeof(freq) / sizeof(int);
 	MinHeap minHeap = MinHeap(chars, freq, len);
 	cout << minHeap << endl;
+	MinHeap heap2 = MinHeap();
+	for (int i = len - 1; i >= 0; --i)
+	{
+		heap2.insert(HeapNode{chars[i], freq[i]});
+	}
+	cout << heap2 << endl;
 	char chars2[] = {'b', 'a', 'c', 'e', 'c', 'f', 'g', 'h', 'i', 'j', 'k', 'l'};
 	int brr[] = {4, 1, 3, 2, 16, 9, 10, 14, 8, 7};
 	MinHeap testH = MinHeap(chars2, brr, 10);
