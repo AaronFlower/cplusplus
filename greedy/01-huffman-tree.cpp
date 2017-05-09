@@ -2,10 +2,15 @@
 
 using namespace std;
 
+/**
+ * HeapNode 即可以当 Heap 的节点，也可当作 Huffman 树的节点。
+ */
 struct HeapNode
 {
 	char value;
 	int freq;
+	HeapNode * left;
+	HeapNode * right;
 };
 
 class MinHeap
@@ -15,8 +20,9 @@ public:
 	MinHeap(){};
 	MinHeap(char * chars, int * freq, int len);
 	~MinHeap();
-	HeapNode extract();
+	HeapNode * extract();
 	void insert(HeapNode node);
+	HeapNode * buildHuffmanTree();
 
 private:
 	void createMinHeap();
@@ -75,8 +81,7 @@ MinHeap::MinHeap(char * chars, int * freq, int len)
 	nodes = new HeapNode[capicity];
 	for (int i = 0; i < len; ++i)
 	{
-		nodes[i].value = chars[i];
-		nodes[i].freq = freq[i];
+		nodes[i] = HeapNode{chars[i], freq[i], nullptr, nullptr};
 	}
 	createMinHeap();
 }
@@ -144,6 +149,31 @@ void MinHeap::insert(HeapNode node)
 }
 
 /**
+ * 提取最小堆中的最小元素。
+ */
+HeapNode * MinHeap::extract()
+{
+	HeapNode * node = & nodes[0];
+	nodes[0] = nodes[--size];
+	minHeapify(0);
+	return node;
+}
+
+HeapNode * MinHeap::buildHuffmanTree()
+{
+	HeapNode * root, * left, * right;
+	while (size > 1) {
+		left = extract();
+		right = extract();
+		root = new HeapNode{'$', left->freq + right->freq, nullptr, nullptr};
+		root->left =  left;
+		root->right =  right;
+		insert(* root);
+	}
+	return extract();
+}
+
+/**
  * friend method operator overload.
  */
 ostream & operator << (ostream & os, const MinHeap & minHeap)
@@ -156,8 +186,7 @@ ostream & operator << (ostream & os, const MinHeap & minHeap)
 	return os;
 }
 
-
-int main(int argc, char const *argv[])
+void testHeap()
 {
 	int freq[] = {9, 5, 12, 16, 13, 45};
 	char chars[] = {'b', 'a', 'c', 'e', 'c', 'f'};	
@@ -167,12 +196,25 @@ int main(int argc, char const *argv[])
 	MinHeap heap2 = MinHeap();
 	for (int i = len - 1; i >= 0; --i)
 	{
-		heap2.insert(HeapNode{chars[i], freq[i]});
+		heap2.insert(HeapNode{chars[i], freq[i], nullptr, nullptr});
 	}
 	cout << heap2 << endl;
 	char chars2[] = {'b', 'a', 'c', 'e', 'c', 'f', 'g', 'h', 'i', 'j', 'k', 'l'};
 	int brr[] = {4, 1, 3, 2, 16, 9, 10, 14, 8, 7};
 	MinHeap testH = MinHeap(chars2, brr, 10);
 	cout << testH << endl;
+}
+
+
+int main(int argc, char const *argv[])
+{
+	testHeap();
+	cout << "---->>>" << endl;
+	int freq[] = {9, 5, 12, 16, 13, 45};
+	char chars[] = {'b', 'a', 'c', 'e', 'c', 'f'};	
+	int len = sizeof(freq) / sizeof(int);
+	MinHeap minHeap = MinHeap(chars, freq, len);
+	cout << minHeap << endl;
+	HeapNode * huffmanTree = minHeap.buildHuffmanTree();
 	return 0;
 }
