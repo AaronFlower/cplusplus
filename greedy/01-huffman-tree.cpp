@@ -2,6 +2,8 @@
 
 using namespace std;
 
+#define MAX_TREE_HEIGHT 100
+
 /**
  * HeapNode 即可以当 Heap 的节点，也可当作 Huffman 树的节点。
  */
@@ -153,7 +155,7 @@ void MinHeap::insert(HeapNode node)
  */
 HeapNode * MinHeap::extract()
 {
-	HeapNode * node = & nodes[0];
+	HeapNode * node = new HeapNode{nodes[0].value, nodes[0].freq, nullptr, nullptr};
 	nodes[0] = nodes[--size];
 	minHeapify(0);
 	return node;
@@ -170,7 +172,7 @@ HeapNode * MinHeap::buildHuffmanTree()
 		root->right =  right;
 		insert(* root);
 	}
-	return extract();
+	return root;
 }
 
 /**
@@ -184,6 +186,25 @@ ostream & operator << (ostream & os, const MinHeap & minHeap)
 		cout << minHeap.nodes[i].value << "(" << minHeap.nodes[i].freq << ")" << "\t";
 	}
 	return os;
+}
+
+void printHuffmanTree(HeapNode * root, int arr[], int top)
+{
+	if (root->left) {
+		arr[top] = 0;
+		printHuffmanTree(root->left, arr, top + 1);
+	}
+	if (root->right) {
+		arr[top] = 1;
+		printHuffmanTree(root->right, arr, top + 1);
+	}
+	if (root->left == nullptr && root->right == nullptr) {
+		cout << root->value << "(" << root->freq << "):";
+		for (int i = 0; i < top; ++i) {
+			cout << arr[i];
+		}
+		cout << endl;
+	}
 }
 
 void testHeap()
@@ -216,5 +237,7 @@ int main(int argc, char const *argv[])
 	MinHeap minHeap = MinHeap(chars, freq, len);
 	cout << minHeap << endl;
 	HeapNode * huffmanTree = minHeap.buildHuffmanTree();
+	int arr[MAX_TREE_HEIGHT], top = 0;
+	printHuffmanTree(huffmanTree, arr, top);
 	return 0;
 }
