@@ -31,6 +31,3 @@ aux_source_directory (. DIR_SRCS)
 # add the executable
 add_executable (power ${DIR_SRCS})
 target_link_libraries (power ${EXTRA_LIBS})
-
-
-
