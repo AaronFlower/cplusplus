@@ -2,7 +2,7 @@
 
 现在将我们的 `power` 函数的实现放在新建目录中。
 
-```
+```bash
 $ tree 
 .
 ├── main.c
@@ -17,7 +17,7 @@ $ tree
 
 ### 根目录 `CMakeList.txt` 文件
 
-```
+```cmake
 # CMake 最低版本号要求
 cmake_minimum_required (VERSION 3.10)
 
@@ -39,7 +39,7 @@ target_link_libraries(Demo myPower)
 
 ### `math` 目录下的 `CMakeLists.txt` 
 
-```
+```cmake
 # 查找当前目录下的所有源文件
 aux_source_directory(. DIR_LIB_SRCS)
 

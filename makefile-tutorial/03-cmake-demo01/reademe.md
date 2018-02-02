@@ -3,7 +3,7 @@
 
 执行 `cmake PATH` , PATH 是 `CMakeLists.txt` 文件所在的目录。cmake 生成的信息会放在当前目录。
 
-```
+```bash
 > cd 03-cmake-demo01
 > mkdir build
 > cd build
@@ -12,7 +12,7 @@
 
 ### 执行 make 命令
 
-```
+```bash
 > make 
 
 > ./power 2 10 

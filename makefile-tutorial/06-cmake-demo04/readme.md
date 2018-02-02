@@ -4,7 +4,7 @@
 
 ### `CMakeLists.txt`
 
-```
+```cmake
 #CMake Version
 cmake_minimum_required (VERSION 3.10)
 
@@ -50,7 +50,7 @@ math 子目录下 `CMakeLists.txt` 内容不变。
 ### ccmake
 
 执行交互式 `ccmake` , 会生成 `config.h` 文件。
-```
+```bash
 > mkdir build
 > cd build
 > ccmake .. # 交互式编译
@@ -58,12 +58,12 @@ math 子目录下 `CMakeLists.txt` 内容不变。
 
 当 `USE_MYMATH` 为 `ON` 时，生成的 `config.h` 的内容如下：
 
-```
+```c++
 #define USE_MYMATH
 ```
 
 为 `OFF` 时，生成的 `config.h` 内容如下：
-```
+```c++
 /* #undef USE_MYMATH */
 ```
 
@@ -71,7 +71,7 @@ math 子目录下 `CMakeLists.txt` 内容不变。
 
 会链接静态库。
 
-```
+```bash
 > make 
 Scanning dependencies of target myPower
 [ 25%] Building C object math/CMakeFiles/myPower.dir/myPower.c.o
@@ -85,10 +85,10 @@ Scanning dependencies of target power
 > ./power 2 3  
 Now we use our own Math library.
  2 ^ 3 = 8
-``` 
+```
 
 ### `USE_MYMATH OFF` make & exec
-```
+```bash
 > make  
 Scanning dependencies of target power
 [ 50%] Building C object CMakeFiles/power.dir/main.c.o
