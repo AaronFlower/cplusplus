@@ -1,0 +1,8 @@
+main.cpp:6:32: error: expected ';' after expression
+        cout << "Hello world!" << endl
+                                      ^
+                                      ;
+main.cpp:7:9: error: cannot initialize return object of type 'int' with an lvalue of type 'const char [3]'
+        return "OK"
+               ^~~~
+2 errors generated.
