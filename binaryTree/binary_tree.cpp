@@ -43,23 +43,60 @@ void BTree::insert(BNode * node, double val) {
 }
 
 
-void BTree::preorder(vector<double> &v) {
+void BTree::inorder(vector<double> &v) {
     if (root == nullptr) {
         return;
     } else {
-        preorder(root, v);     
+        inorder(root, v);     
     }
 }
 
-void BTree::preorder(BNode * node, vector<double> &v) {
+void BTree::inorder(BNode * node, vector<double> &v) {
     if (node == nullptr) {
         return;
     } else {
-        preorder(node->left, v);
+        inorder(node->left, v);
         v.push_back(node->value);
-        preorder(node->right, v);
+        inorder(node->right, v);
     }
 }
+
+void BTree::postorder(vector<double> &v) {
+    postorder(root, v);
+}
+
+void BTree::postorder(BNode* node, vector<double> &v) {
+    if (node == nullptr) return;
+    postorder(node->left, v);
+    postorder(node->right, v);
+    v.push_back(node->value);
+}
+
+void BTree::preorder(vector<double> &v) {
+    preorder(root, v);
+}
+
+void BTree::preorder(BNode* node, vector<double> &v) {
+    if (node == nullptr) return;
+    v.push_back(node->value);
+    preorder(node->left, v);
+    preorder(node->right, v);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,26 +1,39 @@
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "binary_tree.h"
 
 using std::cout;
 using std::endl;
 using std::vector;
+using std::string;
+
+
+void printOrder(const string & order, const vector<double> & v) {
+    cout << order << endl;
+    for (auto ele : v) {
+        cout << ele << "\t" ;
+    }
+    cout << endl;
+}
 
 int main () {
     cout << "Hello Binary Tree" << endl;
-    vector<double> values;
+    vector<double> data = {10, 6, 14, 5, 8, 11, 18};
+    vector<double> inV, postV, preV;
 
     BTree tree;
-    tree.insert(10);
-    tree.insert(6);
-    tree.insert(11);
-    tree.insert(14);
-    tree.preorder(values);
-    
-    for(auto begin = values.cbegin(); begin < values.cend(); ++begin) {
-        cout << *begin << "\t";
+    for (auto d: data) {
+        tree.insert(d);
     }
-    cout << endl;
+    tree.inorder(inV);
+    tree.postorder(postV);
+    tree.preorder(preV);
+
+    printOrder("Inorder", inV);
+    printOrder("Preorder", preV);
+    printOrder("Postorder", postV);
+    
     return 0;
 }
