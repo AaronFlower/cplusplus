@@ -2,7 +2,6 @@
 #include "binary_search_tree.h"
 #include <vector>
 
-
 using std::cout;
 using std::endl;
 using std::vector;
@@ -18,7 +17,7 @@ void testDestroy () {
     vector<int> v;
     vector<int> init_data = {12, 5, 18, 2, 9, 15, 19, 13, 17};
     BinarySearchTree tree(init_data);
-    tree.inorderTreeWalk(v);
+    tree.inorderTreeWalkStack(v);
     printVector(v);
 }
 
@@ -28,7 +27,7 @@ int main () {
     tree.insertNode(3);
     tree.insertNode(6);
     vector<int> v;
-    tree.inorderTreeWalk(v);
+    tree.inorderTreeWalkStack(v);
     printVector(v);
 
 

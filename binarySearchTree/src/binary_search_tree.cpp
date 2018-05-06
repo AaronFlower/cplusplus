@@ -1,7 +1,9 @@
 #include "binary_search_tree.h"
 #include <vector>
+#include <stack>
 
 using std::vector;
+using std::stack;
 
 BinarySearchTree::BinarySearchTree(const vector<int> &v) :BinarySearchTree() {
     for (auto x:v) {
@@ -60,6 +62,30 @@ void BinarySearchTree::inorderTreeWalk(BNode * tree, vector<int> &v) {
         inorderTreeWalk(tree->left, v);
         v.push_back(tree->key);
         inorderTreeWalk(tree->right, v);
+    }
+}
+
+void BinarySearchTree::inorderTreeWalkStack(vector<int> &v) {
+    stack<BNode *> stack;
+    if (root) {
+        BNode * cur = root;
+        stack.push(cur);
+        auto size = stack.size();
+        while ((size = stack.size()) > 0) {
+            if (cur) {
+                while (cur->left) {
+                    stack.push(cur->left);
+                    cur = cur->left;
+                }
+            }
+            cur = stack.top();
+            stack.pop();
+            v.push_back(cur->key);
+            if (cur->right) {
+                stack.push(cur->right);
+                cur = cur->right;
+            }
+        }
     }
 }
 
