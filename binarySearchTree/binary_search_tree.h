@@ -13,7 +13,7 @@ struct BNode {
 
 class BinarySearchTree {
     public:
-        BinarySearchTree(){}
+        BinarySearchTree(){root = nullptr;}
         BinarySearchTree(const vector<int> &data);
         ~BinarySearchTree();
 
@@ -22,6 +22,7 @@ class BinarySearchTree {
     
     private:
        void inorderTreeWalk(BNode * tree, vector<int> &v);
+       void destroyTree(BNode * tree);
        BNode * createBNode(int x);
        BNode * root;
 };

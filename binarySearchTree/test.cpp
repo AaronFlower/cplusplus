@@ -14,6 +14,14 @@ void printVector (const vector<int> &v) {
     cout << endl;
 }
 
+void testDestroy () {
+    vector<int> v;
+    vector<int> init_data = {12, 5, 18, 2, 9, 15, 19, 13, 17};
+    BinarySearchTree tree(init_data);
+    tree.inorderTreeWalk(v);
+    printVector(v);
+}
+
 int main () {
     BinarySearchTree tree;
     tree.insertNode(5);
@@ -29,6 +37,9 @@ int main () {
     v.clear(); 
     tree2.inorderTreeWalk(v);
     printVector(v);
+
+
+    testDestroy();
 
     return 0;
 }

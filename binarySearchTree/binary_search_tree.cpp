@@ -4,6 +4,7 @@
 using std::vector;
 
 BinarySearchTree::BinarySearchTree(const vector<int> &v) {
+    root = nullptr;
     for (auto x:v) {
         insertNode(x);    
     }
@@ -36,7 +37,17 @@ void BinarySearchTree::insertNode(int x) {
 }
 
 
-BinarySearchTree::~BinarySearchTree(){}
+BinarySearchTree::~BinarySearchTree(){
+    destroyTree(root);
+}
+
+void BinarySearchTree::destroyTree(BNode *tree) {
+    if (tree) {
+        destroyTree(tree->left);
+        destroyTree(tree->right);
+        delete tree;
+    }
+}
 
 void BinarySearchTree::inorderTreeWalk(vector<int> &v) {
     if (root == nullptr)
