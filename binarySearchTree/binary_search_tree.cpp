@@ -3,8 +3,7 @@
 
 using std::vector;
 
-BinarySearchTree::BinarySearchTree(const vector<int> &v) {
-    root = nullptr;
+BinarySearchTree::BinarySearchTree(const vector<int> &v) :BinarySearchTree() {
     for (auto x:v) {
         insertNode(x);    
     }
