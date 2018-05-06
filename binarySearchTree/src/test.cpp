@@ -1,6 +1,8 @@
 #include <iostream>
-#include "binary_search_tree.h"
 #include <vector>
+#include <gtest/gtest.h>
+
+#include "binary_search_tree.h"
 
 using std::cout;
 using std::endl;
@@ -38,6 +40,15 @@ void testSearch () {
     }
 }
 
+TEST(BinarySearchTree, MAXIMUM) {
+//    BinarySearchTree tree;
+ //   EXPECT_EQ(nullptr, tree.maximum());
+
+    vector<int> init_data = {12, 5, 8, 2, 9, 15, 19, 13, 17};
+    BinarySearchTree tree2(init_data);
+    EXPECT_EQ(19, tree2.maximum()->key);
+}
+
 void testMinMax(const BinarySearchTree &tree) {
     auto maxNode = tree.maximum();
     auto minNode = tree.minimum();
@@ -45,7 +56,7 @@ void testMinMax(const BinarySearchTree &tree) {
     cout << "Tree Min : " << minNode->key << endl;
 }
 
-int main () {
+int main (int argc, char **argv) {
     BinarySearchTree tree;
     tree.insertNode(5);
     tree.insertNode(3);
@@ -67,6 +78,9 @@ int main () {
     testMinMax(tree);
     testMinMax(tree2);
 
-    return 0;
+
+    ::testing::InitGoogleTest(&argc, argv);
+
+    return RUN_ALL_TESTS();
 }
 

@@ -24,6 +24,9 @@ class BinarySearchTree {
         BNode * minimum() const;
         BNode * maximum() const;
 
+        BNode * successor(int x) const;
+        BNode * predecessor(int x) const;
+
     private:
        void inorderTreeWalk(BNode * tree, vector<int> &v);
        void destroyTree(BNode * tree);
