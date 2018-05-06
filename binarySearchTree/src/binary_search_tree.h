@@ -20,7 +20,8 @@ class BinarySearchTree {
         void insertNode(int x);
         void inorderTreeWalk(vector<int> &v);
         void inorderTreeWalkStack(vector<int> &v);
-    
+        BNode * search(int x);
+
     private:
        void inorderTreeWalk(BNode * tree, vector<int> &v);
        void destroyTree(BNode * tree);

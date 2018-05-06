@@ -21,6 +21,23 @@ void testDestroy () {
     printVector(v);
 }
 
+void testSearch () {
+    vector<int> v;
+    vector<int> init_data = {12, 5, 18, 2, 9, 15, 19, 13, 17};
+    BinarySearchTree tree(init_data);
+    tree.inorderTreeWalkStack(v);
+    printVector(v);
+
+    auto node = tree.search(18);
+    if (node && node->key == 18) {
+        cout << "Hit 18" << endl;
+    }
+    node = tree.search(3);
+    if (!node) {
+        cout << "Not hit 3" << endl;
+    }
+}
+
 int main () {
     BinarySearchTree tree;
     tree.insertNode(5);
@@ -39,6 +56,7 @@ int main () {
 
 
     testDestroy();
+    testSearch();
 
     return 0;
 }

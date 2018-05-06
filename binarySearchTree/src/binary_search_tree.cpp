@@ -70,8 +70,7 @@ void BinarySearchTree::inorderTreeWalkStack(vector<int> &v) {
     if (root) {
         BNode * cur = root;
         stack.push(cur);
-        auto size = stack.size();
-        while ((size = stack.size()) > 0) {
+        while (!stack.empty()) {
             if (cur) {
                 while (cur->left) {
                     stack.push(cur->left);
@@ -96,4 +95,21 @@ BNode * BinarySearchTree::createBNode(int x) {
     node->left = nullptr;
     node->right = nullptr;
     return node;
+}
+
+
+BNode * BinarySearchTree::search(int x) {
+    BNode *result = nullptr;
+    BNode * cur = root;
+    while (cur != nullptr) {
+        if (cur->key < x) {
+            cur = cur->right;
+        } else if (cur->key > x) {
+            cur = cur->left;
+        } else {
+            result = cur;
+            break;
+        }
+    } 
+    return result;
 }
