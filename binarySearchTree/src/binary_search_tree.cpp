@@ -100,7 +100,7 @@ BNode * BinarySearchTree::createBNode(int x) {
 
 BNode * BinarySearchTree::search(int x) {
     BNode *result = nullptr;
-    BNode * cur = root;
+    BNode *cur = root;
     while (cur != nullptr) {
         if (cur->key < x) {
             cur = cur->right;
@@ -113,3 +113,24 @@ BNode * BinarySearchTree::search(int x) {
     } 
     return result;
 }
+
+BNode * BinarySearchTree::maximum() const {
+    BNode * cur, * pre;
+    pre = cur = root;
+    while (cur) {
+        pre = cur;
+        cur = cur->right;
+    }
+    return pre;
+}
+
+BNode * BinarySearchTree::minimum() const {
+    BNode * cur, * pre;
+    pre = cur = root;
+    while (cur) {
+        pre = cur;
+        cur = cur->left;
+    }
+    return pre;
+}
+

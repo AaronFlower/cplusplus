@@ -38,6 +38,13 @@ void testSearch () {
     }
 }
 
+void testMinMax(const BinarySearchTree &tree) {
+    auto maxNode = tree.maximum();
+    auto minNode = tree.minimum();
+    cout << "Tree Max : " << maxNode->key << endl;
+    cout << "Tree Min : " << minNode->key << endl;
+}
+
 int main () {
     BinarySearchTree tree;
     tree.insertNode(5);
@@ -57,6 +64,9 @@ int main () {
 
     testDestroy();
     testSearch();
+    testMinMax(tree);
+    testMinMax(tree2);
 
     return 0;
 }
+
