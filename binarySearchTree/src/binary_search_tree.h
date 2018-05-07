@@ -18,9 +18,10 @@ class BinarySearchTree {
         ~BinarySearchTree();
 
         void insertNode(int x);
-        void inorderTreeWalk(vector<int> &v);
-        void inorderTreeWalkStack(vector<int> &v);
-        BNode * search(int x);
+        void inorderTreeWalk(vector<int> &v) const;
+        void inorderTreeWalkStack(vector<int> &v) const;
+        void levelOrderWalk(vector<int> &v) const;
+        BNode * search(int x) const;
         BNode * minimum() const;
         BNode * maximum() const;
 
@@ -28,7 +29,7 @@ class BinarySearchTree {
         BNode * predecessor(int x) const;
 
     private:
-       void inorderTreeWalk(BNode * tree, vector<int> &v);
+       void inorderTreeWalk(BNode * tree, vector<int> &v) const;
        void destroyTree(BNode * tree);
        BNode * createBNode(int x);
        BNode * root;

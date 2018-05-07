@@ -1,9 +1,11 @@
 #include "binary_search_tree.h"
 #include <vector>
 #include <stack>
+#include <queue>
 
 using std::vector;
 using std::stack;
+using std::queue;
 
 BinarySearchTree::BinarySearchTree(const vector<int> &v) :BinarySearchTree() {
     for (auto x:v) {
@@ -50,14 +52,14 @@ void BinarySearchTree::destroyTree(BNode *tree) {
     }
 }
 
-void BinarySearchTree::inorderTreeWalk(vector<int> &v) {
+void BinarySearchTree::inorderTreeWalk(vector<int> &v) const {
     if (root == nullptr)
         return;
     inorderTreeWalk(root, v);
 }
 
 
-void BinarySearchTree::inorderTreeWalk(BNode * tree, vector<int> &v) {
+void BinarySearchTree::inorderTreeWalk(BNode * tree, vector<int> &v) const {
     if (tree) {
         inorderTreeWalk(tree->left, v);
         v.push_back(tree->key);
@@ -65,7 +67,7 @@ void BinarySearchTree::inorderTreeWalk(BNode * tree, vector<int> &v) {
     }
 }
 
-void BinarySearchTree::inorderTreeWalkStack(vector<int> &v) {
+void BinarySearchTree::inorderTreeWalkStack(vector<int> &v) const {
     stack<BNode *> stack;
     if (root) {
         BNode * cur = root;
@@ -98,7 +100,7 @@ BNode * BinarySearchTree::createBNode(int x) {
 }
 
 
-BNode * BinarySearchTree::search(int x) {
+BNode * BinarySearchTree::search(int x) const {
     BNode *result = nullptr;
     BNode *cur = root;
     while (cur != nullptr) {
@@ -134,3 +136,21 @@ BNode * BinarySearchTree::minimum() const {
     return pre;
 }
 
+
+void BinarySearchTree::levelOrderWalk(vector<int> &v) const {
+    if (root) {
+        queue<BNode *> q;
+        q.push(root);
+        while (!q.empty()) {
+            BNode * cur = q.front();
+            q.pop();
+            v.push_back(cur->key);
+            if (cur->left) {
+                q.push(cur->left);
+            }
+            if (cur->right) {
+                q.push(cur->right);
+            }
+        }
+    }
+}

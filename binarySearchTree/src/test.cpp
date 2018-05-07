@@ -49,6 +49,15 @@ TEST(BinarySearchTree, MAXIMUM) {
     EXPECT_EQ(19, tree2.maximum()->key);
 }
 
+TEST(BinarySearchTree, LevelOrderWalk) {
+    vector<int> init_data = {12, 5, 8, 2, 9, 15, 19, 13, 17};
+    BinarySearchTree tree(init_data);
+    EXPECT_EQ(19, tree.maximum()->key);
+    vector<int> v;
+    tree.levelOrderWalk(v);
+    printVector(v);
+}
+
 void testMinMax(const BinarySearchTree &tree) {
     auto maxNode = tree.maximum();
     auto minNode = tree.minimum();
