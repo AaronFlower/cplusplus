@@ -75,6 +75,33 @@ pid = 60924, glob = 6, var = 88
 
 分析结果是一样的。
 
+### 例子 8-6.exit-status.c
+
+```
+# 运行结果
+
+❯ ./8.6-exit-status
+normal termination, exit status = 7
+abnormal termination, signal number = 6
+abnormal termination, signal number = 8
+
+```
+
+每 fork 一个子进程都用一个 wait 函数来等待它。这样就可以获得每个子进程退出的状态。如果我们在第一个子进程中的 exit(7); 注释掉，我们可以看到其 wait 就会报错，而之后的代码还是会执行，最终是在 return 0 中执行。
+
+```
+# 注释掉 exit(7);
+❯ ./8.6-exit-status
+wait error
+abnormal termination, signal number = 126(core file generated)
+abnormal termination, signal number = 6
+abnormal termination, signal number = 8
+normal termination, exit status = 0
+abnormal termination, signal number = 6
+abnormal termination, signal number = 8
+
+```
+
 ### apue -> 08.3
 
 APUE 8.3 介绍的很清楚，可以多看几遍。

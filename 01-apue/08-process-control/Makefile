@@ -1,12 +1,20 @@
 CC=gcc
 
-All: build
+SRCS=$(wildcard *.c)
 
-build: 8-1.fork-1.c 8-1.fork-2.c
-	$(CC) -o 1.out 8-1.fork-1.c
-	$(CC) -o 2.out 8-1.fork-2.c
+PROGS = $(patsubst %.c, %, $(SRCS))
+
+$(info PROGS=$(PROGS))
+
+all: $(PROGS)
+
+%: %.c
+	$(CC) -o $@ $^
+
+# %.o: %c
+# 	$(CC) -o $@ $<
 
 .PHONY: clean
 
 clean:
-	rm *.out
+	rm $(PROGS)
