@@ -9,7 +9,7 @@ fork() causes creation of a new process. The new process (child process) is an e
     - The child process has a different parent process ID.
     - The child process has its own copy of the parent's descriptors.  These descriptors reference the same underlying objects, so that, for instance, file pointers in file objects are shared between the child and the parent, so that an lseek(2) on a descriptor in the child process can affect a subsequent read or write by the parent.  This descriptor copying is also used by the shell to establish standard input and output for newly created processes as well as to set up pipes.
 
-### 例子1：`01-fork.c`
+### 例子1：`8-1.fork-1.c`
 
 - 在 console 中执行得到结果如下：
 
@@ -36,7 +36,7 @@ pid = 49036, glob = 6, var = 88
 ```
 这是因为在命令行中直接输出会受缓冲区 flush 的影响，而在重重定向后父进程和子进程的文件描述符是共享的，标准输出被拷贝了一份所以输出是分离的。
 
-### `02-fork.c`
+### 例子2：`8-1.fork-2.c`
 
 ```
 ❯ ./a.out
