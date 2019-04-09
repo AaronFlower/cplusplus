@@ -16,36 +16,6 @@ typedef union {
 /**
  * static 函数的意思是指，该函数只作用于编译单元中，如果没有调用能被发现的, 编译时会报 [-Wunused-function] 。
  */
-static void test_string () {
-    // Alwarys use htonl, ntohl , 永远要使用字节序转换函数，因为不同机器的字节可能不一样。
-    // mac, centos 竟然是 little-endian
-    EXPECT_EQ_INT(10, 5);
-    EXPECT_EQ_INT(5, 5);
-    const char *addr = "127.0.0.1";
-    /* const char *one_addr = "0.0.0.1"; */
-    const char *one_addr = "1.0.0.0";
-    const char *group_addr = "224.0.0.1";
-    struct in_addr in_val;
-    inet_aton(addr, &in_val);
-    fprintf(stdout, "%s = %u = %u = %x \n", addr, in_val.s_addr,  ntohl(in_val.s_addr) , ntohl(in_val.s_addr));
-    inet_aton(one_addr, &in_val);
-    fprintf(stdout, "%s = %u = %u = %x \n", addr, in_val.s_addr,  ntohl(in_val.s_addr) , ntohl(in_val.s_addr));
-    inet_aton(group_addr, &in_val);
-    fprintf(stdout, "%s = %u = %u = %x \n", addr, in_val.s_addr,  ntohl(in_val.s_addr) , ntohl(in_val.s_addr));
-}
-
-static void test_ntoa () {
-    struct in_addr in_val;
-    in_val.s_addr = 0x1;
-    fprintf(stdout, "%s\n", inet_ntoa(in_val));
-    in_val.s_addr = htonl(0x1);
-    fprintf(stdout, "%s\n", inet_ntoa(in_val));
-    in_val.s_addr = 0x7f000001;
-    fprintf(stdout, "%s\n", inet_ntoa(in_val));
-    in_val.s_addr = htonl(0x7f000001);
-    fprintf(stdout, "%s\n", inet_ntoa(in_val));
-}
-
 static void test_endian() {
     union {
         short s;
@@ -66,15 +36,6 @@ static void test_endian() {
     }
 }
 
-int main () {
-    int i = 1;
-    printf("%d  \n", i );
-	test_string();
-    test_ntoa();
-    test_endian();
-	printf("%d/%d (%3.2f%%) passed\n", test_pass, test_count, test_pass * 100.0 / test_count);
-	return main_ret;
-}
 static int get_byte_order() {
     un_short un;
     un.val = 0x0102;
