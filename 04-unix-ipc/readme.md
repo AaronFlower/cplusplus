@@ -97,3 +97,147 @@ fcntl(fd, F_SETLKW, &fl);  /* F_GETLK, F_SETLK, F_SETLKW */
 fl.l_type = F_UNLCK;        // tell it to unlock the region
 fcntl(fd, F_SETLK, &fl);    // set the region to unlocked
 ```
+
+## 7 Message Queues
+
+System 中的 IPC 通信方式消息队列是一个很棒的设计，好多平台都实现了这个功能，当然包含 （linux) 了。
+
+Message Queue 的工作方式和 FIFO 类似。通常消息队列是按顺序进行处理的。一个进程可以创建新的消息队列，也可以选择去连接一个已经存在的消息队列，所以进程之前可以通过消息队列进行通信。
+
+需要注意一点是，即使所有进程都退出，创建的消息队列还是存在的。所以可以用 `ipcs` 来检查是否还有未销毁的队列，然后可以用 `ipcrm` 来销毁该队列。
+
+- `ipcs` : Display information about resources used in IPC (Inter-process Communication).
+- `ipcrm`: remove the specified message queues, semaphore sets, and shared memory segments
+
+### 7.1 Where's my queue?
+
+```
+int msgget(key_t key, int msgflg);
+```
+
+msgget 链接一个队列，如果队列不存在则创建它。成功的话会返回 queue ID ，出错的话返回 -1 并且会置全局 (errno).
+
+- key 参数是一个系统的全局惟一标识，可以用于连接也可用于创建。其它进程通过这个 key 来进行连接。
+- msgflg 参数用于指明操作，IPC_CREATE 说明是创建一个队列，也可与其它权限值进行 OR, 消息队列与标准文件的权限是一样的也有 user-id, group-id.
+
+### 7.2 "Are you the key Master?"
+
+如果你指定的 key 是无效的怎么办？可能其它进程也用到了同样的一个 key 怎么办？我们可以用 `ftok` 函数来生成一个Key.
+
+```
+#include <sys/ipc.h>
+key_t ftok(const char *path, int id)
+```
+
+- ftok  -- create IPC identifier from path name
+
+- path 参数通常是进程可以读取一个文件
+- id 参数可是任意的字符，如 'A'.
+
+ftok 函数利用文件的信息如 (inode number) 和 id 生成一个惟一的 key 供 msgget() 使用。其它进程想使用这个队列，需要使用相同的参数获取同样的 key.
+
+常用的 code snippet:
+
+```
+#include <sys/ipc.h>
+
+key = ftok("/home/beej/somefile", 'b');
+msgid = msgget(key, 0666 | IPC_CREAT);
+```
+
+### 7.3 Sending to the queue
+
+向队列发送信息的话，需要使用 `struct msgbuf`, 每个信息有两部分组成 ：
+
+```
+#include <sys/msg.h>
+
+struct msgbuf {
+    long mtype;
+    char mtext[1];
+};
+```
+
+- mtype ：任何大于 0 的数，在后面检索信息的时候会用到。
+- mtext ：向队列中添加的数据 。
+
+从上面的结构体看，我们仅能向队列上一次添加一个字符。 其实，我们可以一次向队列中添加任意结构的数据，只要我们的第一个元素是 long 类型。比如我们可自己定义下面的结构体：
+
+```
+struct pirate_msgbuf {
+    long mtype;         /* must be positive */
+    struct pirate_info {
+        char name[30];
+        char ship_type;
+    } info;
+};
+```
+
+定义好消息后，我们就可以用 `msgsnd()` 函数发送数据了：
+
+```
+int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
+```
+
+- msgid: msgget() 返回的 id
+- msgp : 发送消息结构体的指针
+- msgsz: 自定义消息的大小（不包含 mtype 成员的大小）
+- msgflg: 我们可以忽略，直接设置成 0 即可
+
+所以一完整的发送 code snippet 如下：
+
+```
+#include <sys/msg.h>
+#incldue <stddef.h>
+
+key_t key;
+int msqid;
+struct pirate_msgbuf pmb = {2, {"L'Olonais", 'S'}};
+
+key = ftok("/home/somefile", 'b');
+msqid = msgget(key, 0666 | IPC_CREAT);
+
+msgsnd(msqid, &pmb, sizeof(struct pirate_info), 0);
+```
+
+### 7.4 Receiving from the queue
+
+与 `msgsnd()` 对应的是 `msgrcv()` ， 我们可以用它进行接收信息。
+
+```
+int msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg);
+```
+
+我们需要关注提 `msgtyp` 参数，其取值如下：
+
+| msgtyp | Effect|
+|--------| ------|
+| 0      | 从 queue 中检索下一个 message|
+| Positive| 取 与 msgsnd 中的 mtype 相等的消息|
+| Negative| 取队列中 mtype 绝对值小于 msgtyp 的第一个 message|
+
+所以如果我们只是取队列中下一个消息，只需要设置 msgtyp 为 0 即可。
+
+### 7.5 Destroying a message queue
+
+当需要释放资源要销毁队列时，我们可以使用两种方式：
+1. 使用 `ipcs` 和 `ipcrm` 命令。
+2. 使用 `msgctl()` 函数。
+
+`msgctl()` 函数定义如下：
+
+```
+int msgctl(int msqid, int cmd, struct msqid_ds *buf);
+```
+
+- msqid: msgget() 返回的 id
+- cmd: 用于指明函数的具体操作，在这里我们只需要使用  IPC_RMID 删除队列即可。
+- buf: 当 cmd 为 IPC_RMID 时，该参数可以传空。
+
+所以销毁队列的 code snippet 如下：
+
+```
+#include <sys/msg.h>
+
+msgctl(msqid, IPC_RMID, NULL);
+```
