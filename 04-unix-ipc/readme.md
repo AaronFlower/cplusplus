@@ -241,3 +241,80 @@ int msgctl(int msqid, int cmd, struct msqid_ds *buf);
 
 msgctl(msqid, IPC_RMID, NULL);
 ```
+
+## 11 Unix sockets, Unix Domain Socket
+
+FIFOs 像管道一样只能进行单身发送数据。而 Unix Domain Sockets 可支持双向发送，是一个全双工的管道。其 API 和网络 socket 类似。
+
+### 11.1 Overview
+
+虽然 Unix Sockets 类似于全双工的 FIFOs, 但是操作时需要用 socket api, 而不是用 file api, 即用 (socket, bind, recv ) 而不是用 (open, read)。
+
+Unix socket 用文件路径来标识，使用下面的结构体：
+
+```
+struct sockaddr_un {
+    unsigned short sun_family;          // AF_UNIX
+    char sun_path[108];
+}
+```
+
+### 11.2 What to to be a Server?
+
+怎么才成为一个服务器那？分下面几个步骤：
+
+1. `socket()` : 创建一个 Unix socket
+2. `bind()` : 将 socket 绑定到一个 Unix domain 的地址上。
+3. `listen()`: 在该地址上进行监听
+4. `accept`: 接收客户端的请求，返回一个新的 socket ，新的 socket 用于与客户端进行通信，而老的 socket 继续监听。
+5. Handle the connection: send(), recv() 进行全双工交互。
+6. `close()` : 关闭 socket.
+
+### 11.3 What to do be a client
+
+怎么才能成为一个客户端那？分以下几步：
+1. `socket()` : 创建一个 socket
+2. `connect()`: 设置好 `struct sockaddr_un` 服务器地址信息，进行链接。
+3. `send(), recv()`: 进行全双式交互.
+
+### 11.4 `socketpair()` - quick full-duplex pipes
+
+`pipe()` 返回的两个描述符是有方向性的：`fds[2]`, fds[0] 用于读， fds[1] 用于写。如果我想创建全双工的怎么办？那就使用 Unix socket 了，但是 Unix socket 进行 bind, listen, accept 还是比较繁琐。
+
+`socketpaire()` 可以为我们创建一对已经连接好的 sockets。这样我不需要额外的工作，只负责通信通信就行了，十分简单吧。
+
+下面的一个例子，我们创建两个进程，第一个进程发送一个字符给第二个进程，第二个进程接收到后转换成大写字符后再返回给第一个进程。
+
+```
+int main(void)
+{
+    int socks[2];
+    char buf;
+    pid_t pid;
+
+    if (socketpair(AF_UNIX, SOCK_STREAM, 0, socks) == -1) {
+        perror("[-] Error socketpair");
+        exit(1);
+    }
+
+    if ((pid =fork()) == -1) {
+        perror("[-] Error fork");
+        exit(1);
+    } else if (pid == 0) {
+        close(socks[0]);
+        read(socks[1], &buf, 1);
+        printf("child: read '%c'\n", buf);
+        buf = toupper(buf);
+        write(socks[1], &buf, 1);
+        printf("child: sent '%c' \n", buf);
+    } else {
+        close(socks[1]);
+        write(socks[0], "b", 1);
+        printf("parent: sent 'b' \n");
+        read(socks[0], &buf, 1);
+        printf("parent: read '%c' \n", buf);
+        wait(NULL); // wait for child to die
+    }
+    return 0;
+}
+```
