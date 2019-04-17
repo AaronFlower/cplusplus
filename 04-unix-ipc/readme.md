@@ -43,3 +43,22 @@ There is no form of IPC that is simpler than pipes. `pipe()` takes an array of t
 pipe() 分配的两个 fd ，我在 fork() 出的子进程中应该关闭其一个不需要的 fd, 而在父进程中也应该关闭另外一个。虽然子进程和父进程都拷贝一份，共有两份。系统对同时能打开的 fd 是有上限的，所以不用的 fd 我们还是关掉吧。
 
 - `dup(fd)` 函数会根据 fd 克隆出一个 fd, 其 clone 出来的是第一个可用的描述符（即最小的描述符）
+
+## 5. FIFO
+
+FIFO ("First IN, First Out", pronounced "Fy-Foh") , 也被称之为命名管道 named pipe. 其解决的问题是 pipe 只能用在同一个程序中的进程中，如果多个程序中的进程相互怎么实现通信那？那么使用 FIFO 就可以解决这个问题。
+
+With FIFOs, though, each unrelated process can simply open() the pipe and transfer data through it.
+
+###  A New FIFO is Born
+
+FIFO 其是磁盘上的一个文件，我们需要用 `mknod` 系统调用来创建它。` man mknod` -- make device special file.
+
+```
+mknod("myfifo", S_IFIFO | 0644, 0);
+```
+- 第一个参数是创建特殊文件的名称
+- 第二个参数是告诉创建的特殊文件的类型，这里我们创建的是 FIFO, 及创建该文件的权限
+- 第三个参数是设备号，在创建 FIFO 文件时可以忽略。
+
+FIFO 文件也可通过 Linux 命令 `mknod` 来创建。
