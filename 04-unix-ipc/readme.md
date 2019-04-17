@@ -33,3 +33,13 @@ main () {
 - SIGUSR1       User-define signal 1
 - SIGUSR2       User-define signal 2
 - SIGCHLD       Child process terminated or stopped.
+
+## 4. Pipes
+
+没有比 Pipes 更简单的 IPC 了。`pipe(fds)` 会创建两个 fd, 第一个用于读，第二用于写。
+
+There is no form of IPC that is simpler than pipes. `pipe()` takes an array of two ints as an argument. Assuming no errors, it connects two file descriptors and returns them in the array. The first element of the array is the reading-end of the pipe, the second is the writing end.
+
+pipe() 分配的两个 fd ，我在 fork() 出的子进程中应该关闭其一个不需要的 fd, 而在父进程中也应该关闭另外一个。虽然子进程和父进程都拷贝一份，共有两份。系统对同时能打开的 fd 是有上限的，所以不用的 fd 我们还是关掉吧。
+
+- `dup(fd)` 函数会根据 fd 克隆出一个 fd, 其 clone 出来的是第一个可用的描述符（即最小的描述符）
