@@ -11,3 +11,25 @@ main () {
     fork();fork();fork();
 }
 ```
+
+## Signals
+
+进程可以捕获信号然后调用对应的 handler 来处理。一个进程也可以抛出一个信号让另一个进程来捕获进行处理。
+
+对于有些进程收到信号后，可以设置 SA_RESTART 重启系统调用。
+
+注意：
+1. 在 handler 中我们应该使用线程安全的函数(async safe)，如输出用 write 而不用 printf。
+2. 在 handler 中你不能改变任何全局变量。但是声明为 `volatile sig_atomic_t` 类型的全局变量是可以的。
+3. 关于 ANSI-C 的 `signal()` 函数是不可靠的，所以最好还是用 `sigaction()` 函数。
+
+一常用的信号:
+
+- SIGABRT       Process abort signal
+- SIGALRM       Alarm clock.
+- SIGINT        Terminal interrup signal
+- SIGKILL       Kill(cannot be caught or ignored)
+- SIGQUIT       Terminal quit signal
+- SIGUSR1       User-define signal 1
+- SIGUSR2       User-define signal 2
+- SIGCHLD       Child process terminated or stopped.
