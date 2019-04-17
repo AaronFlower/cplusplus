@@ -62,3 +62,38 @@ mknod("myfifo", S_IFIFO | 0644, 0);
 - 第三个参数是设备号，在创建 FIFO 文件时可以忽略。
 
 FIFO 文件也可通过 Linux 命令 `mknod` 来创建。
+
+
+## 6. File Locking
+
+通过简单对文件加锁也是一种很高效的通信机制。关于锁有两种机制：强制型和咨询型 (mandatory and advisory)。在这里我们只讨论 advisory 锁，它双分为：读锁(read locks) 和 写锁 (write locks) 也称为 shared locks, exclusive locks)。
+
+对文件进行加锁可以用 `flock()` 和 `fcntl()` 函数。
+
+### 6.1 Setting a lock
+
+`fcntl()` 函数是一个万能工具函数，可以对文件做一切操作。对文件加锁需要用 `struct flock` 结构体，一般的 code snipet 如下：
+
+```
+struct flock fl;
+int fd;
+
+fl.l_type   = F_WRLCK;  /* F_RDLCK, F_WRLCK, F_UNLCK    */
+fl.l_whence = SEEK_SET; /* SEEK_SET, SEEK_CUR, SEEK_END */
+fl.l_start  = 0;        /* Offset from l_whence         */
+fl.l_len    = 0;        /* length, 0 = to EOF           */
+fl.l_pid    = getpid(); /* our PID                      */
+
+fd = open("filename", O_WRONLY);
+
+fcntl(fd, F_SETLKW, &fl);  /* F_GETLK, F_SETLK, F_SETLKW */
+```
+
+### 6.2 Clearing a lock
+
+加锁后，在完成工作后，我需要对文件锁进行清除。一般的 code snippet 如下：
+
+```
+fl.l_type = F_UNLCK;        // tell it to unlock the region
+fcntl(fd, F_SETLK, &fl);    // set the region to unlocked
+```
