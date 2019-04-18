@@ -312,11 +312,17 @@ struct semid_ds {
 
 ### 8.3 semop(): Atomic power
 
-`semop()` 系统调用可以完成 `set, get, test-n-set` 操作，
+`semop()` 系统调用可以完成 `set, get, test-n-set` 操作.
+
+semop -- atomic array of operations on a semaphore set
 
 ```
+#include <sys/sem.h>
+
 int semop(int semid, struct sembuf *sops, unsigned int nspos);
 ```
+
+The semop() system call atomically performs the array of operations indicated by **sops** on the semaphore set indicated by **semid**. The length of **sopes** is indicated by nsops. Each operation is encoded in a **struct sembuf**, which is defined as follows:
 
 而  struct sembuf 的定义如下：
 
@@ -324,16 +330,16 @@ int semop(int semid, struct sembuf *sops, unsigned int nspos);
 /* Warning!  Members might not be in this order! */
 
 struct sembuf {
-    ushort sem_num;
-    short sem_op;
-    short sem_flg;
+    ushort sem_num;     /* semaphore number #*/
+    short sem_op;       /* semaphore operation */
+    short sem_flg;      /* operation flags */
 };
 ```
 
 - sem_num: 要操作的信号量 number.
 - sem_op: 具体的行为, 其取值的含义为：
-    - Negative: 分配资源
-    - Positive: 释放资源
+    - Negative: A negative value for sem_op generally means that a process is waiting for a resource to become available
+    - Positive: When sem_op is positive and the process has alter permission, the semaphore's value is incremented by sem_op's value. If SEM_UNDO is sepecified, the semaphore's adjust on exit value is decremented by sem_op's value. A positive value for sem_op generally corresponds to a process releasing a resource associcated with the semaphore.
     - Zero:     等待对应的 semaphore 变成 0
 - sem_flg: 指定标记来改变 semop() 的行为。
 
@@ -401,7 +407,7 @@ if (data == (char *)(-1)) {
 printf("shared contents: %s \n", data);
 ```
 
-``
+```
 printf("Enter a string: ");
 gets(data)
 ```
