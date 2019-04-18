@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/unistd.h>
 
 /*
  * 下面的一个例子，我们创建两个进程，第一个进程发送一个字符给第二个进程，

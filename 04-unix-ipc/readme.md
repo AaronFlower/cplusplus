@@ -242,6 +242,192 @@ int msgctl(int msqid, int cmd, struct msqid_ds *buf);
 msgctl(msqid, IPC_RMID, NULL);
 ```
 
+## 8 Semaphores
+
+Semaphores 信号量可以看成真正能用的加锁机制。使用 Semaphores 可以用来控制：files, shared memory 等。一个 semaphore 的三个基本操作是： set it , check it, wait until it clears then set it("test-n-set").
+
+### 8.1 Grabbing some semaphores
+
+在创建 semaphores 时，我们其实创建的是一个 semaphore set，其创建函数和 msgget 类似：
+
+```
+#include <sys/sem.h>
+int semget(key_t key, int nsems, int semflg);
+```
+
+- key: 参考与 msgget 中的 key 参数一样，需要用 `ftok` 函数生成。
+- nsems: 指定创建 semaphores set 的大小。
+- semflg: 指定 semget 的行为，如：IPC_CREAT|0644
+
+和 message queue 一样我们可以用 `ipcs, ipcrm` 命令来管理 semaphore set.
+
+**注意**: semaphore set 创建后需要初始化，但是创建初始化不是原子操作。如果两个进程操作会出现 race condition. 解决方法用 IPC_EXCL 标记来进行排它，只有创建的进程才能有初始化的权限，其它进程只能在初始化完成后才能使用。
+
+### 8.2 Controlling your semaphore with semctl()
+
+当你新建了 semaphore set 后，需要将它们初始化成 positive value 后才能使用。`semctl()` 可以保证对 semaphores 操作的原子性。
+
+```
+int semctl(int semid, int semnum, int cmd, .../*arg*/);
+```
+
+- semid: semget() 返回的 id
+- semnum: the ID of the semaphore that you wish to manipulate the value of.
+- cmd: 你想对 semaphore 的操作行为
+- arg: 如果需要传入的话，是一个`union semun` 类型。
+
+`union semun` 的定义如下：
+
+```
+union semun {
+    int val;               /* used for SETVAL only */
+    struct semid_ds *buf;  /* used for IPC_STAT and IPC_SET */
+    ushort *array;         /* used for GETALL and SETALL */
+};
+```
+cmd	        Effect
+SETVAL	    Set the value of the specified semaphore to the value in the val member of the passed-in union semun.
+
+GETVAL	    Return the value of the given semaphore.
+
+SETALL	    Set the values of all the semaphores in the set to the values in the array pointed to by the array member of the passed-in union semun. The semnum parameter to semctl() isn't used.
+
+GETALL	    Gets the values of all the semaphores in the set and stores them in the array pointed to by the array member of the passed-in union semun. The semnum parameter to semctl() isn't used.
+
+IPC_RMID	Remove the specified semaphore set from the system. The semnum parameter is ignored.
+
+IPC_STAT	Load status information about the semaphore set into the struct semid_ds structure pointed to by the buf member of the union semun.
+
+
+针对最后两个选项 `IPC_RMID, IPC_STAT` 所影响的结构体 `struct semid_ds` 定义如下：
+
+```
+struct semid_ds {
+    struct ipc_perm sem_perm;  /* Ownership and permissions
+    time_t          sem_otime; /* Last semop time */
+    time_t          sem_ctime; /* Last change time */
+    unsigned short  sem_nsems; /* No. of semaphores in set */
+};
+```
+
+### 8.3 semop(): Atomic power
+
+`semop()` 系统调用可以完成 `set, get, test-n-set` 操作，
+
+```
+int semop(int semid, struct sembuf *sops, unsigned int nspos);
+```
+
+而  struct sembuf 的定义如下：
+
+```
+/* Warning!  Members might not be in this order! */
+
+struct sembuf {
+    ushort sem_num;
+    short sem_op;
+    short sem_flg;
+};
+```
+
+- sem_num: 要操作的信号量 number.
+- sem_op: 具体的行为, 其取值的含义为：
+    - Negative: 分配资源
+    - Positive: 释放资源
+    - Zero:     等待对应的 semaphore 变成 0
+- sem_flg: 指定标记来改变 semop() 的行为。
+
+
+### 8.4 Destroying a semaphore
+
+和 `msgctl` 一样也可以用 `semctl` 来销毁一个 semaphore set. 常用的代码片断为：
+
+```
+int semid;
+semid = semget();
+
+...
+semctl(semid, 0, IPC_RMID);
+```
+
+下面将用文件访问的例子来举例，虽然我们使用 `fcntl()` 锁可能更方便。但是信号量会更快些。另外信号量一般会和 Shared Memory Segments 一起使用。
+
+## 9 Shared Memory Segments
+
+Shared Memory Segment 即多个进程可以共享内存段. 其创建 `shmget()` 和 `msgget(), semget()` 类似，关闭操作也可以用 ipcs, ipcrm 来操作。
+
+所以其创建的函数原型和代码片段为：
+
+```
+int shmget(key_t key, size_t size, int shmflg);
+```
+
+```
+key_t key;
+int shmid;
+
+key = ftok("/my/shm/file.c", 'R');
+shmid = shmget(key, 1024, 0664 | IPC_CREAT)
+```
+
+### 9.2 Attach me - getting a pointer to the segment
+
+进程要使用共享的内存，需要用 `shmat()` 将共享内存 attach 到你想要访问的内存位置。其函数原型为：
+
+```
+void *shmat(int shmid, void *shmaddr, int shmflg);   // at 是 attach 的缩写。
+```
+
+`shmat()` maps the shared memory segment associated with the shared memory indentifier **shmid** into the address space of the calling process.
+
+- shmid : shmget() 函数返回的 ID
+- shmaddr: 自己可以指定进程要访问的地址空间进程映射，但是推荐使用 `(void *)(0) ` ，让 OS 为你分配。
+- shmflg: 一些操作标记，如：SHM_RDONLY 等。
+
+该函数出错时会返回 -1 并设置全局 errno, 其常用的代码片段为：
+
+```
+data = shmat(shmid, (void *)0, SHM_RDONLY);
+if (data == (char *)(-1)) {
+    perror("shmat");
+}
+```
+
+### 9.3 Reading and Writing
+
+有了 `data` 指针我们就可对这段内存地址进行操作。假设 data 是有 `\0` 字符结尾，那我们可以用下面的方式进行读写：
+
+```
+printf("shared contents: %s \n", data);
+```
+
+``
+printf("Enter a string: ");
+gets(data)
+```
+
+### 9.4 Detaching from and deleting segments
+
+上面我们用 `shmat` 将共享内存映射到我们进程的可以的地址空间，那么当我们不在使用的时候，可以将其 unmap (detach) 掉。我需要使用 `shmdt()` 函数，dt 是 detach 的缩写。
+
+```
+int shmdt(void *shmaddr)
+```
+- shmaddr: shmat 返回的地址，这个函数很简单。
+
+同样在共享内存不需要后，我们可以将其销毁，可以使用 `ipcs, ipcrm` 命令，也可以使用 `shmctl()` 函数来操作。
+
+```
+shmctl(shmid, IPC_RMID, NULL);
+```
+- [ ] 父进程与子进程映射的地址空间一样的吗？打印下地址。
+
+### 9.5 Concurrency, 并发
+
+因为我们是多个进程同时访问操作共享内存，所以进行并发控制是很有必要的。可以使用 semaphore 对其进行加锁。具体的并发控制还是要自己实现的。
+
+- [ ] 如何实现并发那？
+
 ## 11 Unix sockets, Unix Domain Socket
 
 FIFOs 像管道一样只能进行单身发送数据。而 Unix Domain Sockets 可支持双向发送，是一个全双工的管道。其 API 和网络 socket 类似。
@@ -318,3 +504,7 @@ int main(void)
     return 0;
 }
 ```
+
+
+## References
+1. [Beej's Guide to Unix IPC](http://beej.us/guide/bgipc/html/multi/index.html)
