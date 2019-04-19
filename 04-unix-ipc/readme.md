@@ -432,7 +432,61 @@ shmctl(shmid, IPC_RMID, NULL);
 
 因为我们是多个进程同时访问操作共享内存，所以进行并发控制是很有必要的。可以使用 semaphore 对其进行加锁。具体的并发控制还是要自己实现的。
 
-- [ ] 如何实现并发那？
+- [ ] 如何实现并发那？ 请参考[Inter Process Communication - Semaphores](https://www.tutorialspoint.com/inter_process_communication/inter_process_communication_semaphores.htm)
+
+## 10. Memory Mapped Files
+
+进程之间可以通过打开同一个文件，然后通过读写文件进行通信呀，只不过还是有并发同步的问题。通过 Memory Mapped Files 我们可以把文件的部分信息映射到内存，然后进行操作就很方便了。
+
+### 10.1 Mapmaker
+
+在将文件映射到内存之前，你需要先使用 `open()` 系统调用获取一个 fd (file descriptor).
+
+```
+int fd;
+fd = open("/maped/file", O_RDWR);
+```
+
+然后就可用 `mmap()` 系统调用将文件映射到内存啦。
+
+```
+void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t off);
+```
+
+- addr :映射到的内存地址，一般传 NULL 就行了，让操作系统分配。
+- len  :希望映射多大的数据到内存。注意：如果 `len` 不是虚拟内存的页大小，那么 len 将会被 rounded 成相近页大小的 blocksize. 即实际分配是按页大小进行分配映射。
+- prot : "protection" , 用来设置内存的访问权限，可以是下面 bit 位的组合: PROT_READ, PROT_WRITE, PROT_EXEC. 这些组合要是 fd 权限的子集。
+- flags: MAP_SHARED, MAP_PRIVATE 两个可选值，内存是共享还是私有。我们这里因为是 IPC 当然要用 MAP_SHARED 了。
+- fd : 文件描述符。
+- off: 文件内容的偏移位置，即开始映射的位置。注意这个位置也应该是操作系统页大小的倍数。
+
+获取操作系统虚拟内存页的大小可以使用 `getpagesize()` . 一般是 4096B = 4KB. 一般的代码片段如下：
+
+```
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+
+int fd, pagesize;
+char *data;
+
+fd = open("/mapped/foo", O_RDONLY);
+pagesize = getpagesize();
+data = mmap(NULL, pagesize, PROT_READ, MAP_SHARED, fd, 0 * pagesize);
+```
+
+### 10.2 Unmapping the file
+
+使用 `munmap()` 函数将释放映射的内存。
+
+```
+int munmap(caddr_t addr, size_t len);
+```
+addr, len 两个参数与 `mmap()` 函数中传入的参数一致即可。另外当程序退出后映射的内存也会自动释放的。
+
+### 10.3 并发
+
+多个进程之间怎么处理并发那？可以通过 semaphore 来处理。
 
 ## 11 Unix sockets, Unix Domain Socket
 
