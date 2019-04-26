@@ -175,6 +175,7 @@ httpRequest parseRequest(char *msg) {
 
 // clean up listening socket on ctrl-c
 void cleanup (int sig) {
+    (void)sig;
     printf("[+] Cleaning up connections and exiting.\n");
 
     // try to close the listening socket.
@@ -277,7 +278,7 @@ int main(int argc, char *argv[])
 
     // bind to the socket address
     if (bind(listen_sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0 ) {
-       fprintf(stderr, "[-] Error calling bind()\n");
+       fprintf(stderr, "[-] Error calling bind(), errno is : %s\n", strerror(errno));
        exit(EXIT_FAILURE);
     }
 
@@ -343,7 +344,7 @@ int main(int argc, char *argv[])
 
         // If the pid is -1 the fork failed so handle that
         if (pid == -1) {
-            fprintf(stderr, "[-] Error can't fork, error %d \n", errno);
+            fprintf(stderr, "[-] Error can't fork, error %d \n", strerror(errno));
             exit(1);
         }
 
