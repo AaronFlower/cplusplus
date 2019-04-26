@@ -61,7 +61,7 @@ $$
 
 在一个程序中怎么使用线程有多种方式，没有那个最优的，需要根据要处理的问题类型来分析使用那种类型。常有三种模式
 
-#### 2.1 Thread pool (Boss/Worker) 
+#### 2.1 Thread pool (Boss/Worker)
 
 One thread dispatches other threads to do useful work which are usually part of a *worker thread pool*. This thread pool is usually pre-allocated before the boss (or master) begins dispatching threads to work. Although threads are lightweight, they still incur overhead when they are created.
 
@@ -96,13 +96,13 @@ Potential Traps 是要避免死锁。
 
 #### 4.1 Join
 
-A thread join is a protocol to allow the programmer to *collect* all relevant threads at a logical synchronization point. 
+A thread join is a protocol to allow the programmer to *collect* all relevant threads at a logical synchronization point.
 
 For example, in fork-join parallelism, threads are spawned to tackle parallel tasks and then join back up to the main thread after completing their respective tasks (thus performing an implicit barrier at the join point). Note that a thread that executes a join has terminated execution of their respective thread function.
 
 #### 4.2  Condition Variables
 
-Condition variables allow threads to synchronize to a value of a shared resource. Typically, condition variables are used as a notification system between threads. 
+Condition variables allow threads to synchronize to a value of a shared resource. Typically, condition variables are used as a notification system between threads.
 
 ![cv](https://randu.org/tutorials/threads/images/condition_wait.png)
 
@@ -112,13 +112,13 @@ Barriers are a method to synchronize a set of threads at some point in time by h
 
 #### 4.5 Spinlocks
 
-Spinlocks are locks which *spin* on mutexes. Spinning refers to continuously polling until a condition has been met. In the case of spinlocks, if a thread cannot obtain the mutex, it will keep polling the lock until it is free. The advantage of a spinlock is that the thread is kept active and does not enter a sleep-wait for a mutex to become available, thus can perform better in certain cases than typical blocking-sleep-wait style mutexes. Mutexes which are heavily contended are poor candidates for spinlocks. 
+Spinlocks are locks which *spin* on mutexes. Spinning refers to continuously polling until a condition has been met. In the case of spinlocks, if a thread cannot obtain the mutex, it will keep polling the lock until it is free. The advantage of a spinlock is that the thread is kept active and does not enter a sleep-wait for a mutex to become available, thus can perform better in certain cases than typical blocking-sleep-wait style mutexes. Mutexes which are heavily contended are poor candidates for spinlocks.
 
 Spinlocks should be avoided in uniprocessor contexts. Why is this?
 
 #### 4.5 Semaphores
 
-Semaphores are another type of synchronization primitive that come in two flavors: binary and counting. Binary semaphores act much like simple mutexes, while counting semaphores can behave as *recursive mutexes*. Counting semaphores can be initialized to any arbitrary value which should depend on how many resources you have available for that particular shared data. Many threads can obtain the lock simultaneously until the limit is reached. This is referred to as *lock depth*. 
+Semaphores are another type of synchronization primitive that come in two flavors: binary and counting. Binary semaphores act much like simple mutexes, while counting semaphores can behave as *recursive mutexes*. Counting semaphores can be initialized to any arbitrary value which should depend on how many resources you have available for that particular shared data. Many threads can obtain the lock simultaneously until the limit is reached. This is referred to as *lock depth*.
 
 Semaphores are more common in multiprocess programming (i.e. it's usually used as a synch primitive between processes).
 
@@ -146,13 +146,13 @@ int pthread_create(pthread_t *thread, pthread_attr_t *attr, void *(*start_routin
 void pthread_exit(void *value_ptr);
 ```
 
-`pthread_exit()` terminates the thread and provides the pointer `*value_ptr` available to any `pthread_join()` call. 
+`pthread_exit()` terminates the thread and provides the pointer `*value_ptr` available to any `pthread_join()` call.
 
 ```c++
 int pthread_join(pthread_t thread, void **value_ptr);
 ```
 
-`pthread_join()` suspends the calling thread to wait for successful termination of the thread specified as the first argument `pthread_t thread` with an optional `*value_ptr` data passed from the terminating thread's call to `pthread_exit()`. 
+`pthread_join()` suspends the calling thread to wait for successful termination of the thread specified as the first argument `pthread_t thread` with an optional `*value_ptr` data passed from the terminating thread's call to `pthread_exit()`.
 
 `pthread_join()` 不能等自己，两个线程也不能互相等待，不然会发生死锁。
 
@@ -188,7 +188,7 @@ int pthread_cond_broadcast(pthread_cond_t *cond);
 
 ```c++
 int pthread_barrier_init(pthread_barrier_t *barrier, pthread_barrierattr_t *barrier_attr, unsigned int count);
- 
+
 pthread_barrier_t barrier = PTHREAD_BARRIER_INITIALIZER(count);
 
 int pthread_barrier_wait(pthread_barrier_t *barrier);
@@ -227,3 +227,6 @@ int pthread_barrier_wait(pthread_barrier_t *barrier);
 1. [Multithreaded Programming (POSIX pthreads Tutorial)](https://randu.org/tutorials/threads/#resources)
 2. [POSIX Threads Programming in C](https://www.softprayog.in/programming/posix-threads-programming-in-c)
 
+
+
+- [ ] Add the pthreads to sort.
