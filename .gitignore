@@ -1,3 +1,6 @@
 *.out
 *.o
 tags
+*.in
+*.out
+lib
