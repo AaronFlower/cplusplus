@@ -68,6 +68,7 @@ static void test_BM_bad_char_heuristic() {
         start = BMStrSearchBadChar(h4, n4, start + 1);
         EXPECT_EQ_INT(pos4[i], start);
     }
+
 }
 
 int main()

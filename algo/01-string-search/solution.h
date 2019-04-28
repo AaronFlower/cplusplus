@@ -32,11 +32,17 @@ int naiveStrSearch(const char* hayStack, const char* needle, size_t start) {
     return -1;
 }
 
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
 void initBadCharMap(int *badCharMap, const char *needle, size_t len) {
+    // Initialize all occurences as -1
     for (size_t i = 0; i < CHAR_COUNT; ++i) {
         badCharMap[i] = -1;
     }
 
+    // Fill the actual value of last occurence of a character
     for (size_t i = 0; i < len; ++i) {
         badCharMap[(int)needle[i]] = i;
     }
@@ -59,16 +65,14 @@ int BMStrSearchBadChar(const char *hayStack, const char *needle, size_t start) {
     int badCharMap[CHAR_COUNT];
     initBadCharMap(badCharMap, needle, nLen);
 
-    size_t i = start + nLen - 1;
-    size_t j = 0;
-    while (i < hLen) {
-        for (j = 0; j < nLen; ++j) {
-            if (hayStack[i - j] != needle[nLen - j - 1]) {
-                break;
-            }
-        }
-        if (j >= nLen) return i - nLen + 1;
-        i = i + (nLen - 1 - badCharMap[(int)hayStack[i]]);
+    int i = start;
+    int j = 0;
+    int end = hLen - nLen;
+    while (i <= end) {
+        j = nLen - 1;
+        while (j >=0 && hayStack[i + j] == needle[j]) j--;
+        if (j < 0) return i;
+        i += max(1, j - badCharMap[(int)hayStack[i + j]]);
     }
     return -1;
 }
