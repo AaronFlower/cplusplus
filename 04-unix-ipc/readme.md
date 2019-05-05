@@ -585,7 +585,7 @@ int main(void)
   - handler 应该是可重入的，要使用线程安全的函数。
   - 关于 ANSI-C 的 `signal()` 函数是不可靠的，所以最好还是用 `sigaction()` 函。
 
-  - `__sighandler_t` 定义的是一个函数指针类型。在 C Traps & Pitfalls 还你专门介绍了这个定义。
+  - `__sighandler_t` 定义的是一个函数指针类型。在 C Traps & Pitfalls 还专门介绍了这个定义。
 
     ```c
     /* Type of a signal handler.  */
@@ -606,12 +606,12 @@ int main(void)
     ```c
     main () {
         signal(SIGCHLD, SIG_IGN);   // now i don't have to wait()
-    
+
         fork();fork();fork();
     }
     ```
 
-#### 2. 管道 
+#### 2. 管道
 
 - 原理： 父子进程间最简单的通信方式。
 
@@ -636,8 +636,8 @@ int main(void)
     ```
 
 - 相关 Unix 命令：
-  
-  -  `mknod` 
+
+  -  `mknod`
 
 #### 4. FIFE Locking 文件锁
 
@@ -658,7 +658,7 @@ int main(void)
 
 - 相关 Unix 命令：
   - `ipcs`: 查看系统中的 IPC 通信资源状态。
-  - `ipcrm`: 
+  - `ipcrm`:
 
 #### 6. Semaphores, 信号量
 

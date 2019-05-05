@@ -5,8 +5,10 @@
 
 #include <netinet/in.h>      // sockaddr_in
 #include <sys/socket.h>
+#include <signal.h>          // for signal to avoid zombie process
 
 #define MAX_LINE 16384
+#define PORT 8082
 
 char rot13(char c)
 {
@@ -53,7 +55,7 @@ void run()
 
     sin.sin_family = AF_INET;
     sin.sin_addr.s_addr = 0;
-    sin.sin_port = htons(8082);
+    sin.sin_port = htons(PORT);
 
     l = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -66,6 +68,8 @@ void run()
         perror("[-] Error listen");
         exit(1);
     }
+
+    signal(SIGCHLD, SIG_IGN);
 
     while (1) {
         struct sockaddr_storage ss;
