@@ -12,7 +12,7 @@ main () {
 }
 ```
 
-## Signals
+## 3. Signals
 
 进程可以捕获信号然后调用对应的 handler 来处理。一个进程也可以抛出一个信号让另一个进程来捕获进行处理。
 
@@ -565,6 +565,151 @@ int main(void)
 }
 ```
 
+### 总结
+
+| 通信方式       | 原理                                                         | 相关函数                    |
+| -------------- | ------------------------------------------------------------ | --------------------------- |
+| Signals (信号) | 进程通过捕获另一个进程抛出的信号来执行相应的 handler。       | `singal()` `singalaction()` |
+| 管道           | 父子进程通过创建管道完成通信，最简单的通信方式。与 `stdin, stdout, stderr` `fd[0]` 用于读，而 `fd[1]` 用于写。 | `int fd = pipe()`           |
+
+
+#### 1. Signals 信号
+
+- 原理：进程通过捕获另一个进程抛出的信号来执行相应的 handler。
+- 相关函数 `#include <signal.h>`：
+  - `__sighandler_t signal (int __sig, __sighandler_t __handler)`
+  -  `int sigaction (int __sig, const struct sigaction *__restrict __act,  struct sigaction *__restrict __oact) __THROW;`
+
+- 注意点:
+
+  - handler 应该是可重入的，要使用线程安全的函数。
+  - 关于 ANSI-C 的 `signal()` 函数是不可靠的，所以最好还是用 `sigaction()` 函。
+
+  - `__sighandler_t` 定义的是一个函数指针类型。在 C Traps & Pitfalls 还你专门介绍了这个定义。
+
+    ```c
+    /* Type of a signal handler.  */
+    typedef void (*__sighandler_t) (int);
+    __sighandler_t signal (int __sig, __sighandler_t __handler);
+    ```
+
+  - 而忽略信号的 `SIG_IGN` 定义如下：
+
+    ```c
+    #define SIG_DFL ((__sighandler_t)0) /* default signal handling */
+    #define SIG_IGN ((__sighandler_t)1) /* ignore signal */
+    #define SIG_ERR ((__sighandler_t)-1)    /* error return from signal */
+    ```
+
+    只是将 `1` 转换成函数指针而已。所以父进程忽略子进程结束的信号可以用下面的方式：
+
+    ```c
+    main () {
+        signal(SIGCHLD, SIG_IGN);   // now i don't have to wait()
+    
+        fork();fork();fork();
+    }
+    ```
+
+#### 2. 管道 
+
+- 原理： 父子进程间最简单的通信方式。
+
+- 相关函数：
+
+  - `int  pipe(int [2]);`  返回一对描述符，fd[0] 用于读，fd[1] 用于写；怎么记住那？ `stdin, stdout` 分别对应的就是 `0, 1` 呀。
+
+  - `int  dup(int)`
+
+#### 3. FIFO 命名管道读作 (Fy-Foh)
+
+- 原理：管道只能用于父子间进程通信，如何让不相关的进程也能通信那？就像 `stdin, stdout, stderr` 这些标准文件一样。FIFO 也是创建一个系统特殊文件，来提供不相关进程的通信方式。
+
+- 相关函数 `#include <sys/stat.h>`:
+
+  - `int mkfifo(const char *, mode_t);`
+
+  - `int mknod(const char *, mode_t, dev_t);`
+
+    ```
+    mknod("myfifo", S_IFIFO | 0644, 0);
+    ```
+
+- 相关 Unix 命令：
+  
+  -  `mknod` 
+
+#### 4. FIFE Locking 文件锁
+
+- 原理：通过文件锁来完成通信。
+- 相关函数：
+  - `int fcntl (int __fd, int __cmd, ...) // #include<fcntl.h>` : 关于文件的万能工具函数。
+  - `int flock (int __fd, int __operation) __THROW // #include <sys/file.h>`
+
+#### 5. Message Queue 消息队列
+
+- 原理：System V 提供的通信方式。
+- 相关函数 `#include <sys/msg.h>`：
+  - `int msgget(key_t key, int msgflg)`
+  - `int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg)`
+  - `int msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg)`
+  - `int msgctl(int msqid, int cmd, struct msqid_ds *buf)` // 销毁队列
+  - `key_t ftok(const char *path, int id)`  // `#include <sys/ipc.h>`
+
+- 相关 Unix 命令：
+  - `ipcs`: 查看系统中的 IPC 通信资源状态。
+  - `ipcrm`: 
+
+#### 6. Semaphores, 信号量
+
+- 原理：初始化后，通过 PV 原语来完成同步。P(decrease),  V(increase) , PV 是来自荷兰语，是由 Dijkstra 提出的。
+- 相关函数 （`#include <sys/sem.h>`）：
+  - `int semget(key_t key, int nsems, int semflg)`
+  - `int semctl(int semid, int semnum, int cmd, .../*arg*/)`: 用于初始化和销毁。
+  - `int semop(int semid, struct sembuf *sops, unsigned int nspos);`
+
+- 相关资料：Wiki 上的 Dijkstra 的 PV 知识，来自荷兰语。
+
+#### 7. Shared Memory Segments
+
+- 原理：多个进程可以共享内存段。注意创建的共享内存段，通常也需要 Semaphores 来完成并发控制。
+- 相关函数 `#include <sys/shm.h>`：
+  - `int shmget(key_t key, size_t size, int shmflg)`
+  - `void *shmat(int shmid, void *shmaddr, int shmflg);   // at 是 attach 的缩写。`
+  - `int shmdt(void *shmaddr) // dt 是 detach 的缩写`
+  - `shmctl(shmid, IPC_RMID, NULL); // 销毁`
+  - `key_t ftok(const char *path, int id) // #include <sys/ipc.h>`
+
+#### 8. Memory Mapped Files
+
+- 原理：进程之间可以通过打开同一个文件，然后通过读写文件进行通信呀，只不过还是有并发同步的问题。通过 Memory Mapped Files 我们可以把文件的部分信息映射到内存，然后进行操作就很方便了。
+- 相关函数 `#include <sys/mman.h>  // memory management` ：
+  - `int fd = open("/maped/file", O_RDWR);`
+  - `void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t off);//文件映射到内存`
+  - ` int munmap (void *__addr, size_t __len); // 释放内存`
+  - `int getpagesize() // #include <unistd.h> 获取操作系统的虚拟内存大小`
+
+#### 9. Unix Sockets, Unix Domain Socket
+
+- 原理：FIFOs 像管道一样只能进行单身发送数据。而 Unix Domain Sockets 可支持双向发送，是一个全双工的管道。其 API 和网络 socket 类似。
+
+- 相关函数 `#include <sys/socket.h>`：
+
+  - Server 端：
+    - `socket()` : 创建一个 Unix socket
+    - `bind()` : 将 socket 绑定到一个 Unix domain 的地址上。
+    - `listen()`: 在该地址上进行监听
+    - `accept`: 接收客户端的请求，返回一个新的 socket ，新的 socket 用于与客户端进行通信，而老的 socket 继续监听。
+    - Handle the connection: send(), recv() 进行全双工交互。
+    - `close()` : 关闭 socket.
+  - Client 端：
+    - `socket()` : 创建一个 socket
+    - `connect()`: 设置好 `struct sockaddr_un` 服务器地址信息，进行链接。
+    - `send(), recv()`: 进行全双式交互.
+
+  - Quick full-duplex pipes
+    - `socketpaire()` 可以为我们创建一对已经连接好的 sockets。而且都是全双工的。
 
 ## References
+
 1. [Beej's Guide to Unix IPC](http://beej.us/guide/bgipc/html/multi/index.html)
