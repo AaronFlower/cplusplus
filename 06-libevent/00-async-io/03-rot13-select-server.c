@@ -61,6 +61,7 @@ void make_nonblocking(int fd) {
 }
 
 int do_read(int fd, fd_state *state) {
+    printf("do_read %d\n", fd);
     char buf[1024];
     int i;
     ssize_t result;
@@ -68,7 +69,7 @@ int do_read(int fd, fd_state *state) {
     while (1) {
         result = recv(fd, buf, sizeof(buf), 0);
 
-        if (result < 0) {
+        if (result <= 0) {
             break;
         }
 
@@ -84,7 +85,7 @@ int do_read(int fd, fd_state *state) {
         }
     }
 
-    if (result == 1) {
+    if (result == 0) {
         return 1;
     } else if (result < 0) {
         if (errno == EAGAIN) {
@@ -96,6 +97,7 @@ int do_read(int fd, fd_state *state) {
 }
 
 int do_write(int fd, fd_state *state) {
+    printf("do_write %d\n", fd);
     while (state->n_written < state->write_upto) {
         ssize_t result = send(fd, state->buffer + state->n_written, state->write_upto - state->n_written, 0);
 
@@ -123,7 +125,7 @@ void run(void) {
     fd_state *state[FD_SETSIZE];
 
     struct sockaddr_in sin;
-    int i, max_fd, fd;
+    int i, maxfd;
 
     // fd_set 是根据 FD_SETSIZE 定义一个 bit 位类型。
     fd_set readset, writeset, exset;
@@ -132,21 +134,23 @@ void run(void) {
     // INADDR_ANY don't bind socket to a specific IP.
     // The socket accepts connections to all the IPs of the machine.
     // 多宿主机，multi-hosted , 因为有无线、有线、wifi, 4G 等，IP 是不同的。
-    sin.sin_addr.s_addr = INADDR_ANY;
+    sin.sin_addr.s_addr = htonl(INADDR_ANY);
     sin.sin_port = htons(PORT);
 
-    for (i = 0; i < FD_SETSIZE; ++i) {
+    for (i = 0; i < FD_SETSIZE; ++i)
         state[i] = NULL;
+
+    listener = socket(AF_INET, SOCK_STREAM, 0);
+    make_nonblocking(listener);
+
+    if (bind(listener, (struct sockaddr*)&sin, sizeof(sin)) < 0) {
+        perror("bind");
+        return;
     }
 
-    if ((listener = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("[-] Error socket");
-        exit(1);
-    }
-
-    if (bind(listener, (struct sockaddr *)&sin, sizeof(sin)) < 0 ) {
-        perror("[-] Error bind");
-        exit(1);
+    if (listen(listener, 16)<0) {
+        perror("listen");
+        return;
     }
 
     FD_ZERO(&readset);
@@ -154,7 +158,7 @@ void run(void) {
     FD_ZERO(&exset);
 
     while (1) {
-        max_fd = listener;
+        maxfd = listener;
 
         FD_ZERO(&readset);
         FD_ZERO(&writeset);
@@ -162,12 +166,10 @@ void run(void) {
 
         FD_SET(listener, &readset);
 
-        for (i = 0; i < FD_SETSIZE; ++i) {
+        for (i=0; i < FD_SETSIZE; ++i) {
             if (state[i]) {
-                // new socket comming
-                if (i > max_fd) {
-                    max_fd = i;
-                }
+                if (i > maxfd)
+                    maxfd = i;
                 FD_SET(i, &readset);
                 if (state[i]->writing) {
                     FD_SET(i, &writeset);
@@ -175,55 +177,44 @@ void run(void) {
             }
         }
 
-        if (select(max_fd + 1, &readset, &writeset, &exset, NULL) < 0) {
-            perror("[-] Error select");
-            exit(1);
+        if (select(maxfd+1, &readset, &writeset, &exset, NULL) < 0) {
+            perror("select");
+            return;
         }
 
         if (FD_ISSET(listener, &readset)) {
             struct sockaddr_storage ss;
             socklen_t slen = sizeof(ss);
-            if ((fd = accept(listener, (struct sockaddr *)&ss, &slen) < 0)) {
-                perror("[-] Error accept");
-                exit(1);
+            int fd = accept(listener, (struct sockaddr*)&ss, &slen);
+            if (fd < 0) {
+                perror("accept");
             } else if (fd > FD_SETSIZE) {
                 close(fd);
             } else {
                 make_nonblocking(fd);
                 state[fd] = alloc_fd_state();
-                assert(state[fd]);
+                assert(state[fd]);/*XXX*/
             }
         }
 
-        for (i = 0; i < max_fd + 1; ++i) {
+        for (i=0; i < maxfd+1; ++i) {
             int r = 0;
-            if (i == listener) {
+            if (i == listener)
                 continue;
-            }
+
             if (FD_ISSET(i, &readset)) {
                 r = do_read(i, state[i]);
             }
-
             if (r == 0 && FD_ISSET(i, &writeset)) {
                 r = do_write(i, state[i]);
             }
-
             if (r) {
                 free_fd_state(state[i]);
                 state[i] = NULL;
                 close(i);
             }
         }
-
-
-
-
-
-
     }
-
-
-
 }
 
 int main() {
