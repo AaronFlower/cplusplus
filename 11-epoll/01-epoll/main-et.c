@@ -11,7 +11,8 @@
 
 int main(void)
 {
-    int running = 1, ecount, i, nbytes;
+    int running = 1, ecount, i;
+    size_t nbytes, j;
     char buf[BUF_SIZE + 1];
     struct epoll_event event, events[MAX_EVENTS];
     int epfd, fd;
@@ -36,15 +37,20 @@ int main(void)
             perror("[-] Error epoll_wait");
             exit(1);
         } else if (ecount > 0) {
-            printf("[+] Epoll: %d is ready -- \n", ecount);
+           printf("[+] Epoll: %d is ready -- ", ecount);
            for (i = 0; i < ecount; ++i) {
-               fd = events[i].data.fd;
-               nbytes = read(fd, buf, BUF_SIZE);
-               buf[nbytes] = '\0';
-               printf("[+] Read: '%s' \n", buf);
-               if (!strncmp(buf, "quit\n", 5)) {
-                   running = 0;
-               }
+                fd = events[i].data.fd;
+                nbytes = read(fd, buf, BUF_SIZE);
+                printf("%zd bytes read.\n", nbytes);
+                /* for (j = 0; j < nbytes; ++j) { */
+                /*     printf(" %zd : %d\n", j, buf[j]); */
+                /* } */
+                /* printf("\n"); */
+                buf[nbytes] = '\0';
+                printf("[+] Read: '%s' \n", buf);
+                if (!strncmp(buf, "quit\n", 5)) {
+                    running = 0;
+                }
            }
         } else {
             printf("waiting you input...\n");
