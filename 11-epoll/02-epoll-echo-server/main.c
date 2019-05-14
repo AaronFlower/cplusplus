@@ -15,6 +15,7 @@
 #define BUF_SIZE    32
 #define MAX_EVENTS  64
 #define MILLISECOND 1000
+#define MAX_FD      128     // Only for test
 
 // create socket and bind
 int create_bind_sock () {
@@ -54,7 +55,7 @@ void make_fd_nonblocking(int fd) {
 
 int main()
 {
-    int sock_fd, in_fd;
+    int sock_fd, in_fd, fd;
     struct sockaddr_in sa;
     socklen_t len;
     int ep_fd;
@@ -62,6 +63,10 @@ int main()
     int ecount, i;
     char host_buf[INET_ADDRSTRLEN], buf[BUF_SIZE];
     int n_bytes;
+    char map[MAX_FD]; 
+    char *greeting = "[+] Server: Welcome, kid!\n", *msg = "[+] Server: It's echo from server!\n", *send;
+
+    bzero(map, sizeof(map));
 
     sock_fd = create_bind_sock();
 
@@ -97,7 +102,7 @@ int main()
         }
 
         for (i = 0; i < ecount; ++i) {
-            printf("count ready %d, %d\n", ecount, events[i].data.fd);
+            /* printf("count ready %d, %d\n", ecount, events[i].data.fd); */
             // error or hang up
             if (events[i].events & (EPOLLERR | EPOLLHUP)) {
                 perror("[-] Error poll_wait ");
@@ -127,7 +132,7 @@ int main()
                         make_fd_nonblocking(in_fd);
 
                         event.data.fd = in_fd;
-                        event.events = EPOLLET | EPOLLIN;
+                        event.events = EPOLLET | EPOLLOUT;   // for a new in_fd that it's read to write
                         if (epoll_ctl(ep_fd, EPOLL_CTL_ADD, in_fd, &event) < 0) {
                             perror("[-] Error epoll_ctl");
                             exit(1);
@@ -135,37 +140,46 @@ int main()
                     } // while
                 } else {
                     // 连接的 socket 有数据, ET 触发，用 while 保证取完，用 break 跳出 while
+                    int j = 0;
                     while (1) {
-                        n_bytes = read(events[i].data.fd, buf, BUF_SIZE);
+                        n_bytes = read(events[i].data.fd, buf, BUF_SIZE - 1);
                         if (n_bytes == -1) {
-                            perror("[-] Error read fd");
+                            if (errno == EAGAIN) {
+                                // ET 触发后已经完全取完，就可退出了，并修改 listen
+                                event.data.fd = events[i].data.fd;
+                                event.events = EPOLLOUT | EPOLLET;
+                                epoll_ctl(ep_fd, EPOLL_CTL_MOD, events[i].data.fd, &event);
+                            } else {
+                                perror("[-] Error read fd");
+                                exit(1);
+                            }
                             break;
                         } else if (n_bytes == 0) {
                             // EOF
+                            printf("[-] The client has been closed \n");
                             close(events[i].data.fd);
-                            printf("Closed connection on descriptor %d\n", events[i].data.fd);
+                            printf("[-] Closed connection on descriptor %d\n", events[i].data.fd);
                             break;
                         }
                         
-                        if (write(STDOUT_FILENO, buf, n_bytes) < 0) {
-                            perror("[-] Error write");
-                            exit(1);
-                        }
-                        // 这一点没有看明白为什么要修改那？
-                        event.events = EPOLLOUT |EPOLLET;
-                        epoll_ctl(ep_fd, EPOLL_CTL_MOD, events[i].data.fd, &event);
+                        fprintf(stdout, "[-] while read (%d, %d bytes): %s \n", j++, n_bytes, buf);
                     }
                 }
             } else if(events[i].data.fd & EPOLLOUT) {
-                if (events[i].data.fd != sock_fd) {
-                    if(write(events[i].data.fd, "it's echo from server\n", 22) < 0) {
+                fd = events[i].data.fd;
+                if (fd != sock_fd) {
+                    send = map[fd] == 0 ? greeting : msg;
+                    map[fd] = 1;
+
+                    if(write(fd, send, strlen(send)) < 0) {
                         perror("[-] Error write to client");
                         exit(1);
                     }
 
                     // 为什么还要修改那？
+                    event.data.fd = fd;
                     event.events = EPOLLET | EPOLLIN;
-                    epoll_ctl(ep_fd, EPOLL_CTL_MOD, events[i].data.fd, &event);
+                    epoll_ctl(ep_fd, EPOLL_CTL_MOD, fd, &event);
                 }
             }
         } // for
