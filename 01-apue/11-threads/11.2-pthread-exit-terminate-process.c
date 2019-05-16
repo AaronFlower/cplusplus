@@ -1,5 +1,7 @@
-#include "apue.h"
-#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>         // for exit()
+#include <unistd.h>         // for getpid(), for getppid()
+#include <pthread.h>        // for pthread
 
 pthread_t ntid;
 
@@ -14,7 +16,9 @@ void printids(const char *s) {
 
 
 void * thr_fn(void *arg) {
+    (void)arg;
     printids("new thread: ");
+    exit(0);
     return ((void *)0);
 }
 
@@ -24,10 +28,11 @@ int main(void) {
 
     err = pthread_create(&ntid, NULL, thr_fn, NULL);
     if (err != 0) {
-        err_exit(err, "can't create thread");
+        perror("[-] Error pthread_create");
+        exit(1);
     }
+    sleep(2);
     printids("main thread:");
     sleep(1);
-    exit(0);
     return 0;
 }
