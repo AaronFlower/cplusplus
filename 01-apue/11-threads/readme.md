@@ -14,7 +14,7 @@ new thread:  pid 700 tid 140563713771264 (0x7fd78a3a4700)
 
 ### 11.2-pthread-exit-terminate-process
 
-`11.2-pthread-exit-terminate-process` 在线程中直接调用了 `exit, _Exit, _exit` 会终止所在的进程。 
+`11.2-pthread-exit-terminate-process` 在线程中直接调用了 `exit, _Exit, _exit` 会终止所在的进程。
 
 ```
 $ ./11.2-pthread-exit-terminate-process
@@ -30,7 +30,7 @@ new thread:  pid 1123 tid 140649050666752 (0x7feb68b3f700)
 
 在 Unix 标准中，默认创建线程分配的 stack 大小是 8M. 我们通过 `pthread_attr_t` 来修改 stack 的大小。
 
-可以看到一个线程的大小 (0x7fb9c1ffeee8 - 0x7fb9c1efdee8)/1024 = 1028, 1028/1024 = 1 , 余数为 4 。即 1MB + 4K 
+可以看到一个线程的大小 (0x7fb9c1ffeee8 - 0x7fb9c1efdee8)/1024 = 1028, 1028/1024 = 1 , 余数为 4 。即 1MB + 4K
 ```c
 ➜  11-threads git:(master) ✗ ./x01-pthread_create-man -s 0x100000 hello world kid
 Thread 1: top of stack near 0x7fb9c27fbee8; arg = hello
@@ -53,3 +53,66 @@ Thread 3: top of stack near 0x7f850605cee8; arg = kid
 Joined with thread 3; returned value was KID
 ```
 
+###  11.3-thread-exit
+
+```c
+./11.3-thread-exit
+[+] thread 1: returning
+[+] thread 2: returning
+[+] thread1: exit code 1
+[+] thread2: exit code 2
+```
+
+### 11.4-thread-stack-memory
+
+```c
+# centos
+$ ./11.4-thread-stack-memory
+
+f->a: 1
+f->b: 2
+f->c: 3
+f->d: 4
+f->a: -405813504
+f->b: 32519
+f->c: -397384104
+f->d: 32519
+
+```
+
+```c
+# Mac
+$ ./11.4-thread-stack-memory
+f->a: 1
+f->b: 2
+f->c: 3
+f->d: 4
+[1]    54344 segmentation fault  ./11.4-thread-stack-memory
+```
+
+### 11.5 x01-pthread_create-man
+
+`pthread_cleanup_push, pthread_cleanup_pop` 各系统的实现不定的执行结果 undefined.
+
+```
+# mac
+./11.5-pthread-cleanup
+[+] thread 1: start
+[+] thread 2: start
+[+] thread 1: push complete
+[+] cleanup: thread 1 second handler
+[+] thread 2: push complete
+[+] cleanup: thread 2 second handler
+[1]    61102 segmentation fault  ./11.5-pthread-cleanup
+
+# centos
+
+./11.5-pthread-cleanup
+[+] thread 1: start
+[+] thread 1: push complete
+[+] thread 2: start
+[+] thread 2: push complete
+[+] thread 1 exit code 1
+[+] thread 2 exit code 2
+
+```
