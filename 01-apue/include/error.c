@@ -235,7 +235,7 @@ int lock_reg(int fd,int cmd,int type,off_t offset ,int whence , off_t len)
 }
 
 pid_t lock_test(int fd,int type,off_t offset ,int whence ,off_t len)
-{   
+{
     //函数的作用是测试一把锁，如果存在一把锁，它阻塞由参数指定的锁请求，则此函数返回持有
     //这把锁的进程的进程ID，否则此函数返回0。
     struct flock lock;
@@ -262,7 +262,7 @@ ssize_t readn(int fd,void *ptr ,size_t n)
         {
             if(nleft==0)
                 return -1;
-            else 
+            else
                 break;
         }
         else if(nread==0)
