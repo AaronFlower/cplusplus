@@ -116,3 +116,13 @@ f->d: 4
 [+] thread 2 exit code 2
 
 ```
+
+### 11.13-pthread-mutex-timedlock
+
+```
+$ ./11.13-pthread-mutex-timedlock
+[+] mutex is locked
+[+] current time is 03:16:10 AM
+[+] the time is now 03:16:20 AM
+[-] Error lock mutex again: Success
+```
