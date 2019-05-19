@@ -152,3 +152,35 @@ $ ./x02-pthread-condition-variable
 
 [+] thread main: done == 5 so everyone is done
 ```
+
+#### 11.16-pthread-barrier-sort 
+
+```
+# 使用 8 个线程
+$ ./11.16-pthread-barrier-sort >sort-8-threads.txt
+$ head sort-8-threads.txt
+sort took 0.6570 seconds
+37
+614
+858
+880
+1210
+2126
+2172
+2218
+2333
+
+# 使用 1 个线程
+$ ./11.16-pthread-barrier-sort >sort-1-threads.txt
+$ head sort-1-threads.txt
+sort took 2.2588 seconds
+37
+614
+858
+880
+1210
+2126
+2172
+2218
+2333
+```
