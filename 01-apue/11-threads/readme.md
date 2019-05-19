@@ -24,8 +24,6 @@ main thread: pid 1123 tid 140649059047232 (0x7feb6933d740)
 new thread:  pid 1123 tid 140649050666752 (0x7feb68b3f700)
 ```
 
-
-
 ### x01-pthread_create-man
 
 在 Unix 标准中，默认创建线程分配的 stack 大小是 8M. 我们通过 `pthread_attr_t` 来修改 stack 的大小。
@@ -125,4 +123,32 @@ $ ./11.13-pthread-mutex-timedlock
 [+] current time is 03:16:10 AM
 [+] the time is now 03:16:20 AM
 [-] Error lock mutex again: Success
+```
+
+### x02-pthread-condition-variable
+
+```c
+$ ./x02-pthread-condition-variable
+[+] thread main starting
+                [+] Thread 0 working (0/2)
+                [+] Thread 1 working (0/2)
+                [+] Thread 2 working (0/2)
+                [+] Thread 3 working (0/2)
+[+] thread main : done is 0 which is < 5 so waiting on cond
+                [+] Thread 4 working (0/2)
+                [+] Thread 3 working (1/2)
+                [+] Thread 1 working (1/2)
+                [+] Thread 0 working (1/2)
+                [+] Thread 2 working (1/2)
+                [+] Thread 4 working (1/2)
+                [+] Thread 3 done is now 1. Signalling cond.
+                [+] Thread 1 done is now 2. Signalling cond.
+        [+] thread main: wake - cond was signalled.
+[+] thread main : done is 2 which is < 5 so waiting on cond
+                [+] Thread 2 done is now 3. Signalling cond.
+                [+] Thread 4 done is now 4. Signalling cond.
+                [+] Thread 0 done is now 5. Signalling cond.
+        [+] thread main: wake - cond was signalled.
+
+[+] thread main: done == 5 so everyone is done
 ```
