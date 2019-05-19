@@ -1,0 +1,19 @@
+##
+
+###  x01-pthreads-limits
+
+```
+# Mac
+$ ./x01-pthreas-limits
+THREAD_DESTRUCTOR_ITERATIONS : 4
+THREAD_KEYS_MAX : 512
+THREAD_STACK_MIN : 8192
+THREAD_THREADS_MAX : -1
+
+# Linux(centos)
+$ ./x01-pthreas-limits
+THREAD_DESTRUCTOR_ITERATIONS : 4
+THREAD_KEYS_MAX : 1024
+THREAD_STACK_MIN : 16384
+THREAD_THREADS_MAX : -1
+```
