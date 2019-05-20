@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <limits.h>     // for LONG_MAX
 #include <sys/time.h>   // for gettimeofday()
+#include <unistd.h>
 
 #define NUM_THREADS         1                       // number of threads
 #define NUM_NUM             8000000L                // number of numbers to sort
@@ -34,12 +35,12 @@ void *thread_entry(void *arg) {
     return (void *)0;
 }
 
-/* 
+/*
  * Merge the results of the individual sorted ranges
  */
 void merge() {
     long idx[NUM_THREADS];
-    long i, min_idx, sort_idx, num; 
+    long i, min_idx, sort_idx, num;
 
     for (i = 0; i < NUM_THREADS; ++i) {
         idx[i] = i * NUM_PER_SORT;
@@ -93,9 +94,10 @@ int main(void) {
     elapsed = (double)(end_usec - start_usec) / 1000000.0;
 
     printf("sort took %.4f seconds \n", elapsed);
-    for (i = 0; i < NUM_NUM; ++i) {
-        printf("%ld\n", snums[i]);
-    }
+    /* for (i = 0; i < NUM_NUM; ++i) { */
+    /*     printf("%ld\n", snums[i]); */
+    /* } */
+    pause();
 
     return 0;
 }

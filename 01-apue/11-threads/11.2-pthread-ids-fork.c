@@ -21,6 +21,7 @@ void printids(const char *s) {
 void * thr_fn(void *arg) {
     (void)arg;
     printids("new thread: ");
+    pause();
     return ((void *)0);
 }
 
@@ -51,6 +52,6 @@ int main(void) {
     }
 
     printids("main thread:");
-    sleep(1);
+    pause();
     return 0;
 }

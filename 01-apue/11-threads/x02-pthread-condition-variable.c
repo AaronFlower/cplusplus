@@ -91,11 +91,12 @@ int main(void) {
             perror("[-] Error cond wait");
             exit(1);
         }
-        
+
         puts("\t[+] thread main: wake - cond was signalled.");
     }
 
     printf("\n[+] thread main: done == %d so everyone is done \n", (int)num_threads);
     pthread_mutex_unlock(&lock);
+    pause();
     return 0;
 }

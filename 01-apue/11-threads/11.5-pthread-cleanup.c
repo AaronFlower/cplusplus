@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>     // for pause();
 #include <pthread.h>
 
 void cleanup(void *arg) {
@@ -13,6 +14,7 @@ void * thr_fn1(void *arg)
     pthread_cleanup_push(cleanup, (void *)"thread 1 first handler");
     pthread_cleanup_push(cleanup, (void *)"thread 1 second handler");
     printf("[+] thread 1: push complete\n");
+    pause();
     if (arg) {
         return (void *)1;
     }
@@ -28,6 +30,7 @@ void * thr_fn2(void *arg)
     pthread_cleanup_push(cleanup, (void *)"thread 2 first handler");
     pthread_cleanup_push(cleanup, (void *)"thread 2 second handler");
     printf("[+] thread 2: push complete\n");
+    pause();
     if (arg) {
         return (void *)2;
     }
@@ -64,6 +67,8 @@ int main(void) {
         exit(1);
     }
     printf("[+] thread 2 exit code %ld\n", (long)tret);
+
+    pause();
 
     return 0;
 }
