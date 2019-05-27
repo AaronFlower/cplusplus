@@ -222,3 +222,12 @@ rfoo:
 ```c
 int rfoo(int *__restrict a, int *__restrict b);
 ```
+
+#### 5. what's the difference between `char *s = "hello"` vs. `char s[] = "hello"`
+
+对于 `char *s="hello"` 的修改 `s[0]` 将会导致 bus error.
+
+![image-20190527182641353](/Users/easonzhan/Library/Application Support/typora-user-images/image-20190527182641353.png)
+
+1.[What’s difference between char s[] and char *s in C?](https://www.geeksforgeeks.org/whats-difference-between-char-s-and-char-s-in-c/)
+
