@@ -29,8 +29,8 @@ epoll 对事件的分发有两种模式，ET(edge-triggered) , LT(level-triggere
 ```c
 int fds[2], rfd;
 pipe(fds);
-rfd = fds[0];
-wfd = fds[1];
+wfd = fds[0];
+rfd = fds[1];
 ```
 
 1. 我创建一个管道，返回两个 fds
@@ -79,7 +79,7 @@ EPOLLET 的应用场景一般是，1）使用 nonblocking fd 来避免 blocking 
 
    可以！用来监测 fd readable 进触发。
 
-5. 返回的 fd 的 epoll 实例同是注册该 fd ，会出现什么情况？
+5. 返回的 fd 的 epoll 实例同时双注册该返回的 fd ，会出现什么情况？
 
    `epoll_ctl` 将会出错(EINVAL). 你可以将返回的 fd 注册到其它 epoll 实例中，但不是要自身的实例中。
 
@@ -107,15 +107,13 @@ EPOLLET 的应用场景一般是，1）使用 nonblocking fd 来避免 blocking 
     requested I/O operation.  You must consider it ready until  the  next  (nonblocking)  read/write  yields
     EAGAIN.  When and how you will use the file descriptor is entirely up to you.
 
-    For  packet/token-oriented  files  (e.g.,  datagram socket, terminal in canonical mode), the only way to
-    detect the end of the read/write I/O space is to continue to read/write until EAGAIN.
-
-    For stream-oriented files (e.g., pipe, FIFO, stream socket), the condition that the read/write I/O space
-    is  exhausted can also be detected by checking the amount of data read from / written to the target file
-    descriptor.  For example, if you call read(2) by asking to read a certain amount  of  data  and  read(2)
-    returns  a  lower  number  of bytes, you can be sure of having exhausted the read I/O space for the file
-    descriptor.  The same is true when writing using write(2).  (Avoid this latter technique if  you  cannot
-    guarantee that the monitored file descriptor always refers to a stream-oriented file.)
+    **For  packet/token-oriented  files**  (e.g.,  **datagram socket, terminal in canonical mode**), the only way to detect the end of the read/write I/O space is to continue to read/write until EAGAIN.
+    
+对于 **packet/token-oriented** 文件， 我们可以持续读写，一直遇到 EAGAIN 为止。
+    
+    **For stream-oriented files (e.g., pipe, FIFO, stream socket),** the condition that the read/write I/O space is  exhausted can also be detected by checking the amount of data read from / written to the target file descriptor.  **For example, if you call read(2) by asking to read a certain amount  of  data  and  read(2) returns  a  lower  number  of bytes, you can be sure of having exhausted the read I/O space for the file descriptor.**  The same is true when writing using write(2).  (Avoid this latter technique if  you  cannot guarantee that the monitored file descriptor always refers to a stream-oriented file.)
+    
+    对于 **stream-oriented** 文件，读写时指定长度，通过检查返回值，如果小于指定长度则说明就已经耗尽了。
 
 #### 避免可能的陷阱
 

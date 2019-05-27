@@ -63,8 +63,10 @@ int main()
     int ecount, i;
     char host_buf[INET_ADDRSTRLEN], buf[BUF_SIZE];
     int n_bytes;
-    char map[MAX_FD]; 
-    char *greeting = "[+] Server: Welcome, kid!\n", *msg = "[+] Server: It's echo from server!\n", *send;
+    char map[MAX_FD];
+    char *greeting = "[+] Server: Welcome, kid!\n";
+    char *msg = "[+] Server: It's echo from server!\n";
+    char *send;
 
     bzero(map, sizeof(map));
 
@@ -111,11 +113,12 @@ int main()
             }
 
             if (events[i].events & EPOLLIN) {
-                // EPOLLIN 
+                // EPOLLIN
                 if (sock_fd == events[i].data.fd) {
-                    // has new connection, 用 while 保证 ET 进会取完，用 break 跳出 while
+                    // has new connection,有新的客户端连接进来，将新的链接设置成 NON_BLOCKING,
+                    // 并且加入到 epoll , 用 while 保证 ET 时会取完，用 break 跳出 while
                     while (1) {
-                        len = sizeof(sa); 
+                        len = sizeof(sa);
                         in_fd = accept(sock_fd, (struct sockaddr *)&sa, &len);
                         if (in_fd < 0) {
                             if (errno != EAGAIN && errno == EWOULDBLOCK) {
@@ -125,7 +128,7 @@ int main()
                             break;
                         }
 
-                        inet_ntop(AF_INET, &sa.sin_addr, host_buf, sizeof host_buf); 
+                        inet_ntop(AF_INET, &sa.sin_addr, host_buf, sizeof host_buf);
                         printf("[+] Accept: connection on descriptor %d "
                                 "(host = %s, port = %d) \n", in_fd, host_buf, sa.sin_port);
 
@@ -140,12 +143,12 @@ int main()
                     } // while
                 } else {
                     // 连接的 socket 有数据, ET 触发，用 while 保证取完，用 break 跳出 while
+                    // 数据读取完成后，将 events 类型设置为 EPOLLOUT
                     int j = 0;
                     while (1) {
                         n_bytes = read(events[i].data.fd, buf, BUF_SIZE - 1);
                         if (n_bytes == -1) {
                             if (errno == EAGAIN) {
-                                // ET 触发后已经完全取完，就可退出了，并修改 listen
                                 event.data.fd = events[i].data.fd;
                                 event.events = EPOLLOUT | EPOLLET;
                                 epoll_ctl(ep_fd, EPOLL_CTL_MOD, events[i].data.fd, &event);
@@ -161,7 +164,7 @@ int main()
                             printf("[-] Closed connection on descriptor %d\n", events[i].data.fd);
                             break;
                         }
-                        
+
                         fprintf(stdout, "[-] while read (%d, %d bytes): %s \n", j++, n_bytes, buf);
                     }
                 }
@@ -190,4 +193,3 @@ int main()
     close(ep_fd);
     return 0;
 }
-
