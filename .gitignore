@@ -4,3 +4,4 @@ tags
 *.in
 *.out
 lib
+build
