@@ -50,6 +50,11 @@ ofstream myFile("data.bin", std::ios::out | std::ios::binary);
 fstream myFile("data.bin", std::ios::in | std::ios::out | std::ios::binary);
 ```
 
+另外，还有两个 IO mode.
+
+- `ios::ate` 打开文件后，将指定位的文件尾。
+- `ios::trunc` 打开文件后，将文件内容清空。
+
 ### Reading From a file
 
 读取文件使用 stream 类的成员函数  `read()`
@@ -106,7 +111,7 @@ basic_ostream& seekp( off_type off, std::ios_base::seekdir dir );
 
 ### 读写结构体
 
-通过指针转换，我们可以对结构体进行读写。直接对类和结构体完成序列化真是赞。
+通过指针转换，我们可以对结构体进行读写。直接对类和结构体完成序列化真是赞。但是对于
 
 ```c++
     #include <fstream.h>
@@ -127,6 +132,10 @@ basic_ostream& seekp( off_type off, std::ios_base::seekdir dir );
     myFile.read ((char*)y, sizeof (Data) * 10);
 ```
 
+### peek() 函数
+
+- `file.peek()` 该函数返回下一个位置的字符，但并不移动指针，所以可以用来窥探文件是否到达了文件尾。
+
 ### Closing the file
 
 最后别忘记要关闭文件。
@@ -138,3 +147,4 @@ myFile.close();
 ### References
 
 1. [C++ Binary File I/O](https://courses.cs.vt.edu/cs2604/fall02/binio.html)
+2. [Binary Files with C++](http://www.eecs.umich.edu/courses/eecs380/HANDOUTS/cppBinaryFileIO-2.html)
