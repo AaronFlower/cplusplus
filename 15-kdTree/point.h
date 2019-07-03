@@ -4,6 +4,7 @@
  * Point is parameterized over an integer N.
  * This allows the compiler to verify the type being used correctly
  */
+
 #ifndef POINT_HEAD__
 #define POINT_HEAD__
 
