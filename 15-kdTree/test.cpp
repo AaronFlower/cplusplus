@@ -14,6 +14,7 @@
 using std::cout;
 using std::vector;
 using std::string;
+using std::endl;
 
 TEST(test, Point) {
     vector<double> nums1{1, 2, 3, 4};
@@ -77,10 +78,16 @@ TEST(test, BoundedPQueue) {
     EXPECT_EQ(bpq.size(), 4);
 }
 
+bool isEqualSample(KDTree<2, int>::sample& lhs, KDTree<2, int>::sample rhs) {
+    return lhs.first[0] == rhs.first[0] &&
+        lhs.first[1] == rhs.first[1] &&
+        lhs.second == rhs.second;
+}
+
 TEST(test, KDTreeInit) {
-    KDTree<2, int> tree;
-    EXPECT_EQ(tree.size(), 0);
-    /* vector<pair<Point<2>, int>> points { */
+    KDTree<2, int> tree1;
+    EXPECT_EQ(tree1.size(), 0);
+
     vector<KDTree<2, int>::sample> points{
         {{7, 2}, 0},
         {{5, 4}, 1},
@@ -95,12 +102,152 @@ TEST(test, KDTreeInit) {
     EXPECT_EQ(tree2.size(), 6);
 
     auto res = tree2.bfs();
-    for (auto level: res) {
-        for (auto e : level) {
-            cout << "({" << e.first[0] << ", " << e.first[1] <<  "}, ";
-            cout << e.second << ")  ";
-        }
-        cout << std::endl;
-    }
+    EXPECT_EQ(isEqualSample(res[0][0], {{7, 2}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[1][0], {{5, 4}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[1][1], {{9, 6}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[2][0], {{2, 3}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[2][1], {{4, 7}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[2][2], {{8, 1}, 0}), true);
 
+    tree1 = tree2;
+
+    EXPECT_EQ(tree1.size(), 6);
+    res = tree1.bfs();
+    EXPECT_EQ(isEqualSample(res[0][0], {{7, 2}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[1][0], {{5, 4}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[1][1], {{9, 6}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[2][0], {{2, 3}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[2][1], {{4, 7}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[2][2], {{8, 1}, 0}), true);
+
+    KDTree<2, int> tree3(tree1);
+
+    EXPECT_EQ(tree3.size(), 6);
+    res = tree3.bfs();
+    EXPECT_EQ(isEqualSample(res[0][0], {{7, 2}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[1][0], {{5, 4}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[1][1], {{9, 6}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[2][0], {{2, 3}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[2][1], {{4, 7}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[2][2], {{8, 1}, 0}), true);
+}
+
+TEST(test, findNode) {
+    vector<KDTree<2, int>::sample> points{
+        {{7, 2}, 0},
+        {{5, 4}, 1},
+        {{9, 6}, 0},
+        {{4, 7}, 1},
+        {{8, 1}, 0},
+        {{2, 3}, 0},
+    };
+
+    KDTree<2, int> tree2(points);
+
+    auto res = tree2.testFind({7, 2});
+    EXPECT_EQ(isEqualSample(res, {{7, 2}, 0}), true);
+
+    res = tree2.testFind({8, 1});
+    EXPECT_EQ(isEqualSample(res, {{8, 1}, 0}), true);
+
+    res = tree2.testFind({7, 1});
+    EXPECT_EQ(isEqualSample(res, {{8, 1}, 0}), true);
+
+    res = tree2.testFind({8, 7});
+    EXPECT_EQ(isEqualSample(res, {{9, 6}, 0}), true);
+}
+
+TEST(test, InsertCreate) {
+    vector<KDTree<2, int>::sample> points{
+        {{5, 4}, 1},
+        {{9, 6}, 0},
+        {{4, 7}, 1},
+        {{8, 1}, 0},
+        {{2, 3}, 0},
+    };
+
+    KDTree<2, int> tree;
+
+    EXPECT_EQ(tree.size(), 0);
+
+    tree.insert({7, 2}, 0);
+    EXPECT_EQ(tree.size(), 1);
+
+    // Already exists and change the label.
+    tree.insert({7, 2}, 1);
+    EXPECT_EQ(tree.size(), 1);
+
+    for (auto s : points) {
+        tree.insert(s.first, s.second);
+    }
+    EXPECT_EQ(tree.size(), 6);
+
+    // Already exists and change the label.
+    tree.insert({2, 3}, 1);
+    EXPECT_EQ(tree.size(), 6);
+
+    auto res = tree.bfs();
+    EXPECT_EQ(isEqualSample(res[0][0], {{7, 2}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[1][0], {{5, 4}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[1][1], {{9, 6}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[2][0], {{2, 3}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[2][1], {{4, 7}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[2][2], {{8, 1}, 0}), true);
+
+    // Insert a new node. Always the axis.
+    tree.insert({2, 4}, 1);
+    EXPECT_EQ(tree.size(), 7);
+
+    res = tree.bfs();
+    EXPECT_EQ(isEqualSample(res[0][0], {{7, 2}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[1][0], {{5, 4}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[1][1], {{9, 6}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[2][0], {{2, 3}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[2][1], {{4, 7}, 1}), true);
+    EXPECT_EQ(isEqualSample(res[2][2], {{8, 1}, 0}), true);
+    EXPECT_EQ(isEqualSample(res[3][0], {{2, 4}, 1}), true);
+
+    EXPECT_EQ(tree.contains({2, 4}), true);
+    EXPECT_EQ(tree.contains({3, 4}), false);
+
+    Point<2> pt{2, 4};
+    tree[pt] = 0;
+    auto sample = tree.testFind(pt);
+    EXPECT_EQ(isEqualSample(sample, {{2, 4}, 0}), true);
+
+    pt = {3, 4};
+    tree[pt] = 1;
+    sample = tree.testFind(pt);
+    EXPECT_EQ(isEqualSample(sample, {{3, 4}, 1}), true);
+}
+
+TEST(test, kNN) {
+     vector<KDTree<2, int>::sample> points{
+        {{7, 2}, 0},
+        {{5, 4}, 0},
+        {{9, 6}, 0},
+        {{4, 7}, 0},
+        {{8, 1}, 1},
+        {{2, 3}, 0},
+    };
+
+    // The generated KDTree please references
+    // https://en.wikipedia.org/wiki/K-d_tree
+
+    KDTree<2, int> tree(points);
+
+    auto label = tree.kNNValue({6, 1}, 1);
+    EXPECT_EQ(label, 0);
+
+    label = tree.kNNValue({9, 1}, 1);
+    EXPECT_EQ(label, 1);
+
+    label = tree.kNNValue({6, 1}, 2);
+    EXPECT_EQ(label, 1);
+
+    label = tree.kNNValue({6, 1}, 3, true);
+    EXPECT_EQ(label, 0);
+
+    label = tree.kNNValue({6, 1}, 4, true);
+    EXPECT_EQ(label, 0);
 }
