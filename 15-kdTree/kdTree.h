@@ -15,10 +15,12 @@
 
 #include <vector>
 #include <algorithm>
+#include <queue>
 
 using std::size_t;
 using std::pair;
 using std::vector;
+using std::queue;
 
 
 template <size_t N, typename Y>
@@ -72,6 +74,27 @@ public:
     // In the event of a tie, one of the most frequent value will be choosen.
     Y& kNNValue(const X& key, size_t k) const;
 
+    vector<vector<sample>> bfs() {
+        vector<vector<sample>> res;
+        if (!root) return res;
+
+        queue<Node *> q;
+        q.push(root);
+        while (!q.empty()) {
+            size_t len = q.size();
+            vector<sample> level;
+            for (size_t i = 0; i < len; ++i) {
+                auto top = q.front();
+                q.pop();
+                level.push_back({top->point, top->value});
+                if (top->left) q.push(top->left);
+                if (top->right) q.push(top->right);
+            }
+            res.push_back(level);
+        }
+        return res;
+    }
+
 private:
 
     struct Node {
@@ -117,10 +140,13 @@ private:
 /**  -  -  -  -  - KDTree Implementation Details -  -  -  -  -  **/
 
 template <size_t N, typename Y>
-KDTree<N, Y>::KDTree(vector<sample>& trainData) {
-    buildTree(trainData.begin(), trainData.end(), 0);
-}
+KDTree<N, Y>::KDTree():root(nullptr), _size(0) {}
 
+template <size_t N, typename Y>
+KDTree<N, Y>::KDTree(vector<sample>& trainData):KDTree() {
+    root = buildTree(trainData.begin(), trainData.end(), 0);
+    _size = trainData.size();
+}
 
 template <size_t N, typename Y>
 KDTree<N, Y>::~KDTree() {
@@ -187,7 +213,7 @@ typename KDTree<N, Y>::Node*  KDTree<N,Y>::buildTree(
     };
 
     // @Todo replace lib nth_element
-    size_t len = end - end;
+    size_t len = end - begin;
     KDTree::iterator mid = begin + (len / 2);
     std::nth_element(begin, mid, end, cmp); // linear time partition
 
@@ -205,111 +231,23 @@ typename KDTree<N, Y>::Node*  KDTree<N,Y>::buildTree(
     return newNode;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+template <size_t N, typename Y>
+typename KDTree<N, Y>::Node* KDTree<N, Y>::deepcopyTree(Node* root) {
+    if (root == nullptr) return nullptr;
+    Node *newNode = new Node(*root);
+    newNode->left = deepcopyTree(root->left);
+    newNode->right = deepcopyTree(root->right);
+    return newNode;
+}
+
+template <size_t N, typename Y>
+void KDTree<N, Y>::destoryTree(Node *root) {
+    if (root) {
+        destoryTree(root->left);
+        destoryTree(root->right);
+        delete root;
+    }
+}
 
 
 #endif /* ifndef KD_TREE_H__ */

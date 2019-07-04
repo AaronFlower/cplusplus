@@ -12,6 +12,7 @@
 #include <algorithm>  // for equal
 
 using std::size_t;
+using std::initializer_list;
 
 template<size_t N>
 class Point {
@@ -20,8 +21,12 @@ public:
     // the elements of the Point.
     typedef double* iterator;
     typedef const double* const_iterator;
+    typedef initializer_list<double> dlist;
 
-    size_t size();
+    Point() = default;
+    Point(dlist);
+
+    size_t size() const;
 
     // Queries or retrieves the value of the point at a particular point.
     double& operator[](size_t index);
@@ -51,14 +56,20 @@ double EuclideanDistance(const Point<N> &lhs, const Point<N> &rhs);
 /** - - - - - Implimentation - - - - -  **/
 
 template <size_t N>
-size_t Point<N>::size() {
+Point<N>::Point(dlist data) {
+    assert(data.size() == N);
+    std::copy(data.begin(), data.end(), begin());
+}
+
+template <size_t N>
+size_t Point<N>::size() const {
     return N;
 }
 
 template <size_t N>
 double& Point<N>::operator[](size_t index) {
     assert(index < N);
-    return &coords[index];
+    return coords[index];
 }
 
 template <size_t N>

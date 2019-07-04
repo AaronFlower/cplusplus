@@ -4,10 +4,12 @@
 #include "solution.h"
 #include "point.h"
 #include "boundedPQueue.h"
+#include "kdTree.h"
 
 #include <iostream>
 #include <vector>
 #include <string>
+#include <utility>
 
 using std::cout;
 using std::vector;
@@ -23,6 +25,20 @@ TEST(test, Point) {
     EXPECT_EQ(p1.size(), 4);
     EXPECT_EQ(p2.size(), 4);
     EXPECT_EQ(EuclideanDistance(p1, p2), 16);
+
+    // Test initializer list constructor.
+    const Point<2> p3{2, 4};
+    double a, b;
+    a = p3[0];
+    b = p3[1];
+    EXPECT_EQ(p3.size(), 2);
+    EXPECT_EQ(a, 2);
+    EXPECT_EQ(b, 4);
+
+    const Point<2> p4 = {1, 2};
+    EXPECT_EQ(p4.size(), 2);
+    EXPECT_EQ(p4[0], 1);
+    EXPECT_EQ(p4[1], 2);
 }
 
 TEST(test, BoundedPQueue) {
@@ -59,4 +75,32 @@ TEST(test, BoundedPQueue) {
     EXPECT_EQ(bpq.best(), 0.1);
     EXPECT_EQ(bpq.worst(), 2.718);
     EXPECT_EQ(bpq.size(), 4);
+}
+
+TEST(test, KDTreeInit) {
+    KDTree<2, int> tree;
+    EXPECT_EQ(tree.size(), 0);
+    /* vector<pair<Point<2>, int>> points { */
+    vector<KDTree<2, int>::sample> points{
+        {{7, 2}, 0},
+        {{5, 4}, 1},
+        {{9, 6}, 0},
+        {{4, 7}, 1},
+        {{8, 1}, 0},
+        {{2, 3}, 0},
+    };
+
+    KDTree<2, int> tree2(points);
+
+    EXPECT_EQ(tree2.size(), 6);
+
+    auto res = tree2.bfs();
+    for (auto level: res) {
+        for (auto e : level) {
+            cout << "({" << e.first[0] << ", " << e.first[1] <<  "}, ";
+            cout << e.second << ")  ";
+        }
+        cout << std::endl;
+    }
+
 }
