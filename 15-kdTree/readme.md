@@ -11,7 +11,7 @@ Using KD-Tree to implement kNN algorithm.
 #### test
 
 ```bash
-$ cd cloned/path
+$ cd /your/cloned/path
 $ mkdir build
 $ cd build
 $ cmake ..
@@ -20,3 +20,8 @@ $ ./15-kdTree
 ```
 
 #### Test mnist
+
+```
+$ cd /your/cloned/path
+$ make && ./main
+```
