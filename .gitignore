@@ -7,3 +7,4 @@ lib
 build
 .vscode
 xcode
+__pycache__
