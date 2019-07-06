@@ -1,4 +1,5 @@
 #include <cassert>
+#include <string>
 
 #include "lr.h"
 #include "utils.h"

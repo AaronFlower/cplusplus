@@ -4,8 +4,13 @@
 #include <armadillo>
 #include <string>
 
+#define __version__ "1.0"
+
+using std::string;
+
 class LR {
 public:
+
     LR(size_t num_features);
     ~LR() = default;
 
@@ -22,13 +27,15 @@ public:
 
     double getBias();
 
-    void saveWeights(std::string filename);
-    void loadWeigths(std::string filename);
+    /* void saveWeights(std::string filename); */
+    /* void loadWeigths(std::string filename); */
 
 private:
     size_t num_features;
     arma::colvec theta; // LR weights
     double bias;        // LR bias term
 };
+
+/* const string LR::__version__ = "1.0"; */
 
 #endif /* ifndef Logistic_Regression_H__ */
