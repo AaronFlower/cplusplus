@@ -16,7 +16,7 @@ public:
             size_t batch_size,
             size_t num_iter);
 
-    arma::mat predict(arma::mat X);
+    arma::colvec predict(arma::mat X);
 
     arma::colvec getTheta();
 

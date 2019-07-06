@@ -9,11 +9,11 @@ using arma::colvec;
 
 class Utils {
 public:
-    static mat sigmoid(arma::mat logits);
+    static inline mat sigmoid(arma::mat logits);
 
-    static double accuracy(colvec y, colvec yHat);
+    static inline double accuracy(colvec y, colvec yHat);
 
-    static colvec cross_entropy_loss(colvec y, colvec yHat);
+    static inline colvec cross_entropy_loss(colvec y, colvec yHat);
 };
 
 mat Utils::sigmoid(mat logits) {

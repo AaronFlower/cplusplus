@@ -31,7 +31,7 @@ void LR::train(arma::mat X,
     assert(Y.n_rows == m);
 
     cout << "[+] start training with learning rate: " << alpha
-        << "lambda: " << lambda << ", batch size: " << batch_size << endl;
+        << ", lambda: " << lambda << ", batch size: " << batch_size << endl;
 
     for (size_t i = 0; i < num_iter; ++i) {
         // randomly smaple `batch_size` rows from X
@@ -42,13 +42,15 @@ void LR::train(arma::mat X,
         colvec y_sample = Y.elem(index);
 
         // inference
-        mat logits = X_sample * theta + bias;
-        colvec y_hat = Utils::sigmoid(logits);
+        colvec y_hat = Utils::sigmoid(X_sample * theta + bias);
         colvec y_diff = y_hat - y_sample;
 
-        // @Todo check the formula.
-        theta = (1 - lambda) * theta - (alpha / m) * X_sample.t() * y_diff;
-        bias = bias - (alpha / m) * mean(y_diff);
+        colvec gradient = X_sample.t() * y_diff;
+
+
+        // with bias there's a messy update formula.
+        theta = theta - (lambda / m) * theta -  (alpha / m) * gradient;
+        bias = bias - alpha * mean(y_diff);
 
         if ((i + 1) % 5 == 0 || (i + 1) == num_iter) {
             double loss = mean(Utils::cross_entropy_loss(
@@ -61,4 +63,17 @@ void LR::train(arma::mat X,
                 << ", accuracy " << accuracy << endl;
         }
     }
+}
+
+colvec LR::predict(mat X) {
+    colvec Y = arma::trunc(Utils::sigmoid(X * theta + bias) + 0.5);
+    return Y;
+}
+
+colvec LR::getTheta() {
+    return theta;
+}
+
+double LR::getBias() {
+    return bias;
 }
