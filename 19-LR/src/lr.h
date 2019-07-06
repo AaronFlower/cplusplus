@@ -11,7 +11,7 @@ using std::string;
 class LR {
 public:
 
-    LR(size_t num_features);
+    explicit LR(size_t num_features);
     ~LR() = default;
 
     void train(arma::mat X,

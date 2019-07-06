@@ -24,6 +24,9 @@ TEST(arma, Utils) {
 
 TEST(test, LR) {
     LR model(2);
+    // Oops, creates a new LR with 3 features.
+    // with explicit constructor
+    // model = 3;
     EXPECT_EQ(model.getTheta().n_rows, 2);
     EXPECT_EQ(model.getTheta().n_cols, 1);
 
