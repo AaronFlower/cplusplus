@@ -1,0 +1,5 @@
+TF_CFLAGS=$(shell python3 -c 'import tensorflow as tf; print(" ".join(tf.sysconfig.get_compile_flags()))')
+TF_LFLAGS=$(shell python3 -c 'import tensorflow as tf; print(" ".join(tf.sysconfig.get_link_flags()))')
+
+zero_out.so: zero_out.cc
+	g++ -std=c++11 -shared zero_out.cc -o zero_out.so -fPIC ${TF_CFLAGS} ${TF_LFLAGS} -O2 -undefined dynamic_lookup
