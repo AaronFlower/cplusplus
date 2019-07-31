@@ -16,3 +16,7 @@ set(CMAKE_SHARED_LINKER_FLAGS "-Wl -undefined dynamic_lookup ${Tensorflow_LINK_F
 # build the actual operation which can be used directory
 include_directories(${Tensorflow_INCLUDE_DIRS})
 add_library(inner_product SHARED inner_product.cc)
+
+# build teh gradient operation
+include_directories(${Tensorflow_INCLUDE_DIRS})
+add_library(inner_product_grad SHARED inner_product_grad.cc)
