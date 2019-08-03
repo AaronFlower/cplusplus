@@ -67,7 +67,7 @@ public:
         for (size_t i = 0; i < n; ++i) {
             grad_input_tensor(i, 0) = 0;
             for (size_t j = 0; j < n; ++j) {
-                grad_input_tensor(i, 0) += grad_tensor(i, 0) *
+                grad_input_tensor(i, 0) += grad_tensor(j, 0) *
                     weights_tensor(j, i);
             }
         }

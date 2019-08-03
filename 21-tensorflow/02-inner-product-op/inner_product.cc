@@ -60,7 +60,7 @@ public:
 
         // create output_shape
         TensorShape output_shape;
-        output_shape.AddDim(weights_shape.dim_size(1));
+        output_shape.AddDim(weights_shape.dim_size(0));
         output_shape.AddDim(1);
 
         // create output tensor
