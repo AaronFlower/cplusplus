@@ -150,3 +150,47 @@ CMake 会相应的设置 `CMAKE_<LANG>_FLAGS_<BUILD_TYPE> ` 到 `CMAKE_<LANG>_FL
 - `CMAKE_CXX_COMPILER_ID`
 
 用来标识编译器信息。
+
+
+### function
+
+在 CMake 中，我们可以自定义函数来避免重复自己。定义函数的语法格式:
+
+```
+function(<name> [<arg1> ...])
+  <commands>
+endfunction()
+```
+
+- `function(add_gmock_test target)` , `add_gmock_test` 是函数名，`target` 是函数的每一个参数，后面多余的参数被存储在 `ARGN` list 中。
+- 另外的魔术变量还有：
+    - `ARGC`: 参数的个数
+    - `ARGV`: 所有参数
+    - `ARG0, ARG1, .... ARGn`: 参数.
+
+### Modules
+
+CMake 也支持用 Modules 来组织文件。
+
+1. `list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)`
+
+将自定义的 Modules 目录添加到 `CMAKE_MODULE_PATH` 中.
+
+2. `include(gmock)`
+
+引入我们的自定义 Moduel, cmake 会搜索 `gmock.cmake` 文件。
+
+3. `list(APPEDN list elements)`
+
+将元素添加到 list 列表中。
+
+### Lists
+
+CMake 内置了两种数据类型：`strings` 和 `list`. 一些 list 的操作:
+
+```
+set(myList a b c)
+set(myList a;b;c)
+
+list(APPEND myList a b c)  # 推荐使用这种方式，可以明确是一个 list.
+```
