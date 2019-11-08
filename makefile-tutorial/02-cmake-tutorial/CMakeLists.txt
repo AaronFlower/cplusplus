@@ -2,9 +2,12 @@ cmake_minimum_required(VERSION 3.15.1)
 
 project("ToDo List")
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11")
 
 enable_testing()
+include(gmock)
 
 message("cmake complier: ${CMAKE_CXX_COMPILER_ID}")
 
