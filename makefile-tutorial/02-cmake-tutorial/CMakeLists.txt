@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.15.1)
 
 project("ToDo List")
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11")
+
 enable_testing()
 
 message("cmake complier: ${CMAKE_CXX_COMPILER_ID}")
@@ -22,6 +24,12 @@ set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${warnings}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
 
 
-add_executable(todo main.cpp todo.cpp)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_test(todoTest todo)
+add_subdirectory(todocore)
+
+add_executable(todo main.cpp)
+
+target_link_libraries(todo toDoCore)
+
+add_test(maintest todo)
