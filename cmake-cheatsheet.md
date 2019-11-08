@@ -194,3 +194,151 @@ set(myList a;b;c)
 
 list(APPEND myList a b c)  # 推荐使用这种方式，可以明确是一个 list.
 ```
+
+### Chapter 6: Realistically Getting a Boost
+
+当我们的系统中使用 Boost 第三方库，那我们在构建时怎么把 Boost 给加进来那？
+
+1. `find_package()`
+
+
+CMake 提供了 `find_package()` 来查找类似于 Boost 的命令。
+
+- [深入理解CMake(3):find_package()的使用](https://www.jianshu.com/p/39fc5e548310)
+
+ CMake searches for a file called Find<package>.cmake in the CMAKE_MODULE_PATH followed by the CMake installation. If the file is found, it is read and processed by CMake. It is responsible for finding the package, checking the version, and producing any needed messages.
+
+ex:
+
+```
+find_package(Boost 1.32 REQUIRED COMPONENTS program_options)
+```
+
+CMake 会在 `CMAKE_MODULE_PATH` 中寻找到 FindBoost.cmake 文件，然后执行该文件处理相应的信息。 在 Mac 下是去 `/usr/local/Cellar/cmake/3.15.1/share/cmake/Modules` 目录中寻找。
+
+那么 `FindBoost.cmake` 做了那些工作那，暴露出那些变量了那？我们可以使用 `cmake --help-module FindBoost` 来查看。
+
+- `cmake --help-module FindBoost`
+- `cmake --help-model FindJpeg`
+
+```
+❯ cmake --help-module FindJpeg
+FindJPEG
+--------
+
+Find the Joint Photographic Experts Group (JPEG) library (``libjpeg``)
+
+Imported targets
+^^^^^^^^^^^^^^^^
+
+This module defines the following ``IMPORTED`` targets:
+
+``JPEG::JPEG``
+  The JPEG library, if found.
+
+Result variables
+^^^^^^^^^^^^^^^^
+
+This module will set the following variables in your project:
+
+``JPEG_FOUND``
+  If false, do not try to use JPEG.
+``JPEG_INCLUDE_DIRS``
+  where to find jpeglib.h, etc.
+``JPEG_LIBRARIES``
+  the libraries needed to use JPEG.
+``JPEG_VERSION``
+  the version of the JPEG library found
+
+Cache variables
+^^^^^^^^^^^^^^^
+
+The following cache variables may also be set:
+
+``JPEG_INCLUDE_DIRS``
+  where to find jpeglib.h, etc.
+``JPEG_LIBRARY_RELEASE``
+  where to find the JPEG library (optimized).
+``JPEG_LIBRARY_DEBUG``
+  where to find the JPEG library (debug).
+
+Obsolete variables
+^^^^^^^^^^^^^^^^^^
+
+``JPEG_INCLUDE_DIR``
+  where to find jpeglib.h, etc. (same as JPEG_INCLUDE_DIRS)
+``JPEG_LIBRARY``
+  where to find the JPEG library.
+
+```
+
+一般 Module 会至少定义以下变量：
+
+- Package_FOUND: 标识是否找到
+- Package_INCLUDE_DIRS : include 目录，供 `include_directories()` 命令使用。
+- Package_LIBRARIES : 库文件，供 `target_link_libraries()` 命令使用.
+- Package_DEFINITIONS
+
+```
+❯ cmake ..
+-- Found JPEG: /usr/local/lib/libjpeg.dylib (found version "90")
+CMake Error at /usr/local/Cellar/cmake/3.15.1/share/cmake/Modules/FindPackageHandleStandardArgs.cmake:137 (message):
+  Could NOT find Boost (missing: Boost_INCLUDE_DIR program_options)
+Call Stack (most recent call first):
+  /usr/local/Cellar/cmake/3.15.1/share/cmake/Modules/FindPackageHandleStandardArgs.cmake:378 (_FPHSA_FAILURE_MESSAGE)
+  /usr/local/Cellar/cmake/3.15.1/share/cmake/Modules/FindBoost.cmake:2142 (find_package_handle_standard_args)
+  CMakeLists.txt:24 (find_package)
+
+
+-- Configuring incomplete, errors occurred!
+See also "/Users/eason/code/github.com/AaronFlower/cplusplus/makefile-tutorial/02-cmake-tutorial/build/CMakeFiles/CMakeOutput.log".
+```
+
+发现找不到 Boost 库，是因为本地没有安装，用 homebrew 安装一下 boost 就行了.
+
+
+
+我们可以使用 `cmake --find-pacakge` 来查找相应的库, 使用该选项会执行 [CMakeFindPackageMode](https://cmake.org/cmake/help/v3.0/module/CMakeFindPackageMode.html) 该模块文件，它需要用 `-D` 指定四个变量参数。
+
+```
+NAME = name of the package
+COMPILER_ID = the CMake compiler ID for which the result is, i.e. GNU/Intel/Clang/MSVC, etc.
+LANGUAGE = language for which the result will be used, i.e. C/CXX/Fortan/ASM
+MODE = EXIST : only check for existence of the given package
+       COMPILE : print the flags needed for compiling an object file which uses the given package
+       LINK : print the flags needed for linking when using the given package
+QUIET = if TRUE, don't print anything
+```
+
+```
+❯ cmake --find-package -DNAME=Boost -DCOMPILER_ID=Clang -DLANGUAGE=CXX -DMODE=EXIST
+Boost not found.
+CMake Error: Problem processing arguments. Aborting.
+
+
+❯ cmake --find-package -DNAME=JPEG -DCOMPILER_ID=Clang -DLANGUAGE=CXX -DMODE=EXIST
+JPEG found.
+
+❯ cmake --find-package -DNAME=JPEG -DCOMPILER_ID=Clang -DLANGUAGE=CXX -DMODE=COMPILE
+-I/usr/local/include
+
+❯ cmake --find-package -DNAME=JPEG -DCOMPILER_ID=Clang -DLANGUAGE=CXX -DMODE=LINK
+/usr/local/lib/libjpeg.dylib
+
+❯ brew info jpeg
+jpeg: stable 9c (bottled)
+Image manipulation library
+https://www.ijg.org/
+/usr/local/Cellar/jpeg/9c (21 files, 741.7KB) *
+  Built from source on 2019-10-09 at 00:09:03
+From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/jpeg.rb
+==> Analytics
+install: 118,249 (30 days), 329,462 (90 days), 1,304,832 (365 days)
+install_on_request: 3,823 (30 days), 12,489 (90 days), 55,152 (365 days)
+build_error: 0 (30 days)
+
+❯ ll /usr/local/lib/libjpeg.dylib
+lrwxr-xr-x  1 eason  admin    35B Oct  9 00:09 /usr/local/lib/libjpeg.dylib -> ../Cellar/jpeg/9c/lib/libjpeg.dylib
+```
+
+#### `cmake --help-modules` 可以查看所有可用的 Module.
