@@ -4,43 +4,72 @@
 #include <vector>
 using std::vector;
 
+#include <cstring>
+
 namespace elib
 {
     template <typename T>
     class Queue {
     public:
-        Queue() {};
-        ~Queue() = default;
+        Queue() {
+            size_ = 0;
+            capacity = 4;
+            data = new T[capacity];
+        };
 
-        void push(T& t);
-        T pop();
+        ~Queue() {
+            if (data != nullptr) {
+                delete []data;
+            }
+        }
+
+        void push(T t);
+        void pop();
+        T front() const;
 
         size_t size() {
-            return data.size();
+            return size_;
         }
 
         bool empty() {
-            return data.size() == 0;
+            return size_ == 0;
         }
 
     private:
-        vector<T> data;
+        T* data;
+        size_t size_;
+        size_t capacity;
     };
 
     template <typename T>
-    void Queue<T>::push(T& t) {
-        data.push_back(t);
+    void Queue<T>::push(T t) {
+        if (size_ >= capacity) {
+            capacity *= 2;
+            T *newData = new T[capacity];
+            std::memcpy(newData, data, size_ * sizeof(T));
+            delete data;
+            data = newData;
+        }
+        data[size_++] = t;
     }
 
     template <typename T>
-    T Queue<T>::pop() {
-        if (data.size() > 0) {
-            T t = data[data.size() - 1];
-            data.erase(data.begin() + data.size() - 1);
-            return t;
+    void Queue<T>::pop() {
+        if (size_ > 0) {
+            ++data;
+            --size_;
+        }
+    }
+
+    template <typename T>
+    T Queue<T>::front() const {
+        if (size_ > 0) {
+            return data[0];
         }
         return nullptr;
     }
+
+
 }
 
 #endif /* ifndef ELIB_QUEUE__ */
