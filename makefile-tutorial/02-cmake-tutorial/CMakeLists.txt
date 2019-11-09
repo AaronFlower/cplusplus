@@ -9,6 +9,16 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11")
 enable_testing()
 include(gmock)
 
+
+# find boost
+if (APPLE OR WIN32)
+    set(Boost_USE_STATIC_LIBS TRUE)
+endif()
+
+find_package(Boost REQUIRED COMPONENTS program_options)
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+
+
 message("cmake complier: ${CMAKE_CXX_COMPILER_ID}")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
@@ -33,6 +43,6 @@ add_subdirectory(todocore)
 
 add_executable(todo main.cpp)
 
-target_link_libraries(todo toDoCore)
+target_link_libraries(todo toDoCore ${Boost_LIBRARIES}) # Boost is case sensitive
 
 add_test(maintest todo)

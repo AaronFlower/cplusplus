@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+namespace ToDoCore
+{
+
 class ToDo {
 public:
     ToDo();
@@ -18,4 +21,5 @@ private:
     std::vector<std::string> this_tasks;
 };
 
+} // namespace ToDoCore
 #endif /* ifndef TODO_H__*/
