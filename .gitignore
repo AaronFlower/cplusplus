@@ -8,3 +8,4 @@ build
 .vscode
 xcode
 __pycache__
+cmake-build-debug

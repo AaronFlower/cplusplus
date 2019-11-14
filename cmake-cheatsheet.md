@@ -219,7 +219,7 @@ CMake 会在 `CMAKE_MODULE_PATH` 中寻找到 FindBoost.cmake 文件，然后执
 那么 `FindBoost.cmake` 做了那些工作那，暴露出那些变量了那？我们可以使用 `cmake --help-module FindBoost` 来查看。
 
 - `cmake --help-module FindBoost`
-- `cmake --help-model FindJpeg`
+- `cmake --help-module FindJpeg`
 
 ```
 ❯ cmake --help-module FindJpeg
@@ -342,3 +342,9 @@ lrwxr-xr-x  1 eason  admin    35B Oct  9 00:09 /usr/local/lib/libjpeg.dylib -> .
 ```
 
 #### `cmake --help-modules` 可以查看所有可用的 Module.
+
+#### 编写自己的 `FindModule` 可以参考下面的链接
+
+[cmake-developer](https://cmake.org/cmake/help/v3.14/manual/cmake-developer.7.html#id2)
+
+​	
