@@ -9,3 +9,4 @@ build
 xcode
 __pycache__
 cmake-build-debug
+.idea
