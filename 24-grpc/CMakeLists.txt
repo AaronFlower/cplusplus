@@ -16,6 +16,8 @@ include_directories(SYSTEM ${GRPC_INCLUDE_DIR})
 
 
 add_executable(hello main.cpp)
+add_executable(wordbreak 139-word_break.cpp)
+add_executable(wordbreak2 139-word_break_2.cpp)
 
 add_executable(greeter_server greeter_server.cpp protos/helloworld.grpc.pb.cc protos/helloworld.pb.cc)
 
