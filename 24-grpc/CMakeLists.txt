@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(grpc)
+project(grpc-test)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -9,8 +9,8 @@ list(APPEND CMAKE_PREFIX_PATH "/usr/local")
 # Cmake find modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-find_package(GRPC REQUIRED)
 find_package(Protobuf REQUIRED)
+find_package(gRPC REQUIRED)
 
 include_directories(SYSTEM ${GRPC_INCLUDE_DIR})
 
@@ -24,5 +24,7 @@ add_executable(greeter_server greeter_server.cpp protos/helloworld.grpc.pb.cc pr
 target_link_libraries(greeter_server gRPC::grpc++_reflection protobuf::libprotobuf)
 
 add_executable(greeter_client greeter_client.cpp protos/helloworld.grpc.pb.cc protos/helloworld.pb.cc)
+
+#add_executable(echo_client echo_client.cpp echo.pb.h)
 
 target_link_libraries(greeter_client gRPC::grpc++_reflection protobuf::libprotobuf)

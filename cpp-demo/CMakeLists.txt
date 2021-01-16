@@ -12,6 +12,10 @@ add_subdirectory(lib/googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(${gmock_SOURCE_DIR}/include ${gmock_SOURCE_DIR})
 
+add_subdirectory(05-any)
+add_subdirectory(04-unions)
+add_subdirectory(03-custom-iterator)
+add_subdirectory(02-three-clock)
 add_subdirectory(01-perfect-forward)
 
 add_executable(cpp-demo test.cpp solution.h)

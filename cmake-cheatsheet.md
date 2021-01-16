@@ -1,9 +1,59 @@
 ## CMake Cheatsheet
 
+[TOC]
+
 ### Terms
 
 - target: 目标文件, 用 `make help` 可以查看下有那些 targets.
 
+- `INTERFACE`
+
+  > We first state that anybody linking to MathFunctions needs to include the current source directory, while MathFunctions itself doesn't. So this can become an `INTERFACE` usage requirement.
+  >
+  > Remember `INTERFACE` means things that consumers require but the producer doesn't. 
+
+```cmake
+add_library(MathFunctions mysqrt.cxx)
+
+# state that anybody linking to us needs to include the current source dir
+# to find MathFunctions.h, while we don't.
+target_include_directories(MathFunctions
+          INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+          )
+```
+
+其它地方如果需要链接 `MathFunctions` 就会引入 `INTERFACE` 所指定的头文件。
+
+在其它使用的地方，如：
+
+```cmake
+target_link_libraries(Tutorial PUBLIC MathFunctions)
+```
+
+用 `PUBLIC` 则说明不仅链接也引入 INTERFACE ，即当别地方引入该库时，会为 PUBLIC 引入的子库中的 INTERFACE 也曝露出去。
+
+PRIVATE 则说明，只链接不会将引入的子库的 INTERFACE 曝露出去。
+
+INTERFACE 则说明，只曝露出子库的 INTERFACE，并不要链接库 。
+
+> The `PUBLIC`, `PRIVATE` and `INTERFACE` keywords can be used to specify both the link dependencies and the link interface in one command. Libraries and targets following `PUBLIC` are linked to, and are made part of the link interface. Libraries and targets following `PRIVATE` are linked to, but are not made part of the link interface. Libraries following `INTERFACE` are appended to the link interface and are not used for linking `<target>`.
+
+target_link_libraries 是具有传递性的 （transitive).
+
+[cmake target_link_libraries](https://cmake.org/cmake/help/v3.0/command/target_link_libraries.html)
+
+#### 添加测试
+
+如果添加了测试后，你可以执行下面的命令。
+
+```bash
+ctest -N
+ctest -V
+ctest -VV
+make test
+```
+
+来查看测试结果。
 
 ### Commands
 
@@ -343,8 +393,102 @@ lrwxr-xr-x  1 eason  admin    35B Oct  9 00:09 /usr/local/lib/libjpeg.dylib -> .
 
 #### `cmake --help-modules` 可以查看所有可用的 Module.
 
+```shell
+❯ cmake --help-module-list |grep Find
+CMakeFindDependencyMacro
+CMakeFindFrameworks
+CMakeFindPackageMode
+FindALSA
+FindASPELL
+FindAVIFile
+FindArmadillo
+FindBISON
+FindBLAS
+```
+
 #### 编写自己的 `FindModule` 可以参考下面的链接
 
 [cmake-developer](https://cmake.org/cmake/help/v3.14/manual/cmake-developer.7.html#id2)
 
-​	
+### CMake 注意点
+
+##### 1. 影响 CMake 的环境变量
+
+```bash
+export CC=/usr/local/bin/gcc
+export CXX=/usr/local/bin/g++
+cmake /path/to/your/project
+make
+```
+
+[How to specify new GCC path for CMake](https://stackoverflow.com/questions/17275348/how-to-specify-new-gcc-path-for-cmake)
+
+> Do not overwrite `CMAKE_C_COMPILER`, but export `CC` (and `CXX`) before calling cmake:
+
+#### [gRPC C++](https://github.com/grpc/grpc/tree/master/src/cpp)
+
+官网上推荐的与 CMake 结合的使用方式。
+
+1. 全局安装 gRPC，然后使用 `find_package` 来引入。这需要系统要提前全局安装。
+
+   ```cmake
+   find_package(gRPC CONFIG REQUIRED)
+   add_executable(my_exe my_exe.cc)
+   target_link_libraries(my_exe gRPC::grpc++)
+   ```
+
+2. 对于 `v3.11` 以上的 CMake 推荐使用 `FetchContent` 来引入。
+
+   ```cmake
+   cmake_minimum_required(VERSION 3.15)
+   project(my_project)
+   
+   include(FetchContent)
+   FetchContent_Declare(
+     gRPC
+     GIT_REPOSITORY https://github.com/grpc/grpc
+     GIT_TAG        RELEASE_TAG_HERE  # e.g v1.28.0
+   )
+   set(FETCHCONTENT_QUIET OFF)
+   FetchContent_MakeAvailable(gRPC)
+   
+   add_executable(my_exe my_exe.cc)
+   target_link_libraries(my_exe grpc++)
+   ```
+
+3. `git submodule` 引入 。
+
+   ```cmake
+     # Include the gRPC's cmake build (normally grpc source code would live
+     # in a git submodule called "third_party/grpc", but this example lives in
+     # the same repository as gRPC sources, so we just look a few directories up)
+     add_subdirectory(../../.. ${CMAKE_CURRENT_BINARY_DIR}/grpc EXCLUDE_FROM_ALL)
+     message(STATUS "Using gRPC via add_subdirectory.")
+   
+     # After using add_subdirectory, we can now use the grpc targets directly from
+     # this build.
+     set(_PROTOBUF_LIBPROTOBUF libprotobuf)
+     set(_REFLECTION grpc++_reflection)
+     if(CMAKE_CROSSCOMPILING)
+       find_program(_PROTOBUF_PROTOC protoc)
+     else()
+       set(_PROTOBUF_PROTOC $<TARGET_FILE:protobuf::protoc>)
+     endif()
+     set(_GRPC_GRPCPP grpc++)
+     if(CMAKE_CROSSCOMPILING)
+       find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
+     else()
+       set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:grpc_cpp_plugin>)
+     endif()
+   ```
+
+​	[Full Example](https://github.com/grpc/grpc/blob/master/examples/cpp/helloworld/CMakeLists.txt) 这个例子非常赞，把三种使用场景都考虑到了。
+
+但是上面有一个问题，当我们在线上构建要使用那一种那？
+
+1. 方法 1 需要全局安装，不推荐。
+2. 方法 2 ，我们可以用命令将编译好的文件放到项目中，在用 `find_package` 时指定目录就可以了。
+3. 方法 3 还是需要在线上构建时联网进行 `git submodule update --init`,  如果不能联网就需要将源文件放上去，也很麻烦。
+
+最后还是用方法 2，用 CMake 来管理。
+
