@@ -125,4 +125,7 @@ TEST(MOVE_CHECKER, forward) {
 
     EXPECT_EQ(checker.copies(), 0);
     EXPECT_EQ(checker.moves(), 0);
+    // 在 Linux 上是 1 次，在 Mac 上是 2 次。 what's the reason?
+    EXPECT_EQ(checker.moves(), 2);
 }
+

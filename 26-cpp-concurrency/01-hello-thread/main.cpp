@@ -1,6 +1,8 @@
 #include <thread>
 #include <iostream>
 
+// g++ main.cpp -std=c++17 && ./a.out
+
 using std::cout, std::endl;
 using std::thread;
 
