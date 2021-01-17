@@ -1,5 +1,6 @@
 #include <iostream>
 #include <typeinfo>
+#include <typeindex>
 #include <string>
 
 // non-polymorphic
@@ -19,7 +20,8 @@ int main(void)
     double *my_double_ptr = nullptr;
 
     std::cout
-        << "        my_int has type: " << typeid(my_int).name() << '\n'
+        << "        my_int has type: " << typeid(my_int).name()
+        << ", type_index: " << std::type_index(typeid(my_int)).hash_code() << '\n'
         << "        my_str has type: " << typeid(my_str).name() << '\n'
         << " my_double_ptr has type: " << typeid(my_double_ptr).name() << '\n';
 
@@ -49,7 +51,7 @@ int main(void)
         Derived2 *bad_ptr = nullptr;
         std::cout << "bad_ptr points to ...";
         std::cout << typeid(*bad_ptr).name() << '\n';
-    }catch(const std::bad_typeid &e) {
+    } catch(const std::bad_typeid &e) {
         std::cout << " caught " << e.what() << '\n';
     }
 
