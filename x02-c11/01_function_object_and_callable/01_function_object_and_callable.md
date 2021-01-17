@@ -85,3 +85,12 @@ std::packaged_task();
 C++ 中的可调用对象虽然具有统一的操作形式（除了类成员指针外，都是后面加括号进行调用），但定义方法是五花八门。这样在我们试图使用统一的方式保存，或传递一个可调用对象时，会十分烦琐。
 
 C++11 提供了 `std::function` 和 `std::bind` 统一了可调用对象的各种操作。
+
+#### `std::bind` 绑定函数
+
+The function template bind generates a forwarding call wrapper for f. Calling this this wrapper is equivalent to invoking f with some of its arguements bound to args.
+
+它主要有两大作用:
+
+1. 将 Callable 与其参数一些绑定成一个仿函数。
+2. 将多元参数进行函数柯里化 curring.
