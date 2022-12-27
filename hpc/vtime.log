@@ -1,0 +1,400 @@
+
+
+times in msec
+ clock   self+sourced   self:  sourced script
+ clock   elapsed:              other lines
+
+000.008  000.008: --- VIM STARTING ---
+000.091  000.083: Allocated generic buffers
+000.563  000.472: locale set
+000.566  000.003: clipboard setup
+000.571  000.005: window checked
+001.148  000.577: inits 1
+001.158  000.010: parsing arguments
+001.159  000.001: expanding arguments
+003.726  002.567: shell init
+004.151  000.425: Termcap init
+004.165  000.014: inits 2
+004.291  000.126: init highlight
+012.112  007.300  007.300: sourcing /usr/local/share/vim/vim82/filetype.vim
+012.352  000.071  000.071: sourcing /usr/local/share/vim/vim82/ftplugin.vim
+012.533  000.044  000.044: sourcing /usr/local/share/vim/vim82/indent.vim
+014.661  001.742  001.742: sourcing /Users/eason/.vim/autoload/plug.vim
+021.035  001.767  001.767: sourcing /usr/local/share/vim/vim82/ftoff.vim
+030.750  000.015  000.015: sourcing /Users/eason/.vim/plugged/vim-fugitive/ftdetect/fugitive.vim
+030.983  000.022  000.022: sourcing /Users/eason/.vim/plugged/ultisnips/ftdetect/snippets.vim
+031.213  000.017  000.017: sourcing /Users/eason/.vim/plugged/vim-editorconfig/ftdetect/editorconfig.vim
+031.378  000.014  000.014: sourcing /Users/eason/.vim/plugged/vim-vue/ftdetect/vue.vim
+031.521  000.019  000.019: sourcing /Users/eason/.vim/plugged/typescript-vim/ftdetect/typescript.vim
+031.657  000.019  000.019: sourcing /Users/eason/.vim/plugged/vim-jsx-typescript/ftdetect/typescript.vim
+031.967  000.189  000.189: sourcing /Users/eason/.vim/plugged/vim-go/ftdetect/gofiletype.vim
+032.149  000.035  000.035: sourcing /Users/eason/.vim/plugged/vim-toml/ftdetect/toml.vim
+032.320  000.043  000.043: sourcing /Users/eason/.vim/plugged/nginx.vim/ftdetect/nginx.vim
+032.578  008.874  008.501: sourcing /usr/local/share/vim/vim82/filetype.vim
+033.107  000.019  000.019: sourcing /usr/local/share/vim/vim82/ftplugin.vim
+033.614  000.014  000.014: sourcing /usr/local/share/vim/vim82/indent.vim
+038.011  002.731  002.731: sourcing /usr/local/share/vim/vim82/colors/lists/default.vim
+038.218  003.485  000.754: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+038.370  004.104  000.619: sourcing /usr/local/share/vim/vim82/syntax/synload.vim
+038.469  004.680  000.576: sourcing /usr/local/share/vim/vim82/syntax/syntax.vim
+039.403  000.275  000.275: sourcing /usr/local/Cellar/vim/8.2.5150_1/share/vim/vim82/syntax/nosyntax.vim
+040.477  000.161  000.161: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+040.626  000.757  000.596: sourcing /usr/local/share/vim/vim82/syntax/synload.vim
+040.710  001.684  000.652: sourcing /usr/local/share/vim/vim82/syntax/syntax.vim
+040.841  000.013  000.013: sourcing /Users/eason/.vim/setup/denite.vim
+042.953  001.662  001.662: sourcing /usr/local/share/vim/vim82/colors/lists/default.vim
+044.236  000.171  000.171: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+045.007  000.158  000.158: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+045.723  000.159  000.159: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+046.790  003.368  002.880: sourcing /Users/eason/.vim/plugged/vim-snazzy/colors/snazzy.vim
+049.018  001.769  001.769: sourcing /usr/local/share/vim/vim82/colors/lists/default.vim
+050.473  000.153  000.153: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+051.329  000.184  000.184: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+053.605  004.388  004.051: sourcing /Users/eason/.vim/plugged/vim-colors-solarized/colors/solarized.vim
+053.970  049.354  011.959: sourcing $HOME/.vimrc
+053.976  000.331: sourcing vimrc file(s)
+054.745  000.140  000.140: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/init.vim
+055.763  000.627  000.627: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/parts.vim
+056.012  000.018  000.018: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/formatter/short_path.vim
+057.373  000.239  000.239: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/util.vim
+057.474  003.187  002.163: sourcing /Users/eason/.vim/plugged/vim-airline/plugin/airline.vim
+057.735  000.044  000.044: sourcing /Users/eason/.vim/plugged/vim-airline-themes/plugin/airline-themes.vim
+058.620  000.698  000.698: sourcing /Users/eason/.fzf/plugin/fzf.vim
+059.715  000.913  000.913: sourcing /Users/eason/.vim/plugged/fzf.vim/plugin/fzf.vim
+060.825  000.190  000.190: sourcing /Users/eason/.vim/plugged/vim-easy-align/plugin/easy_align.vim
+062.407  001.393  001.393: sourcing /Users/eason/.vim/plugged/vim-fugitive/plugin/fugitive.vim
+063.118  000.512  000.512: sourcing /Users/eason/.vim/plugged/vim-surround/plugin/surround.vim
+063.784  000.183  000.183: sourcing /Users/eason/.vim/plugged/vim-gitgutter/autoload/gitgutter/utility.vim
+064.423  000.159  000.159: sourcing /Users/eason/.vim/plugged/vim-gitgutter/autoload/gitgutter/highlight.vim
+065.750  002.452  002.110: sourcing /Users/eason/.vim/plugged/vim-gitgutter/plugin/gitgutter.vim
+065.966  000.013  000.013: sourcing /Users/eason/.vim/plugged/vim-tmux-focus-events/plugin/tmux_focus_events.vim
+066.328  000.182  000.182: sourcing /Users/eason/.vim/plugged/vim-commentary/plugin/commentary.vim
+067.410  000.908  000.908: sourcing /Users/eason/.vim/plugged/supertab/plugin/supertab.vim
+068.035  000.091  000.091: sourcing /Users/eason/.vim/plugged/ultisnips/autoload/UltiSnips/map_keys.vim
+068.125  000.529  000.438: sourcing /Users/eason/.vim/plugged/ultisnips/plugin/UltiSnips.vim
+068.345  000.042  000.042: sourcing /Users/eason/.vim/plugged/vim-snippets/plugin/vimsnippets.vim
+069.078  000.042  000.042: sourcing /Users/eason/.vim/plugged/git-blame.vim/plugin/gitblame.vim
+069.906  000.214  000.214: sourcing /Users/eason/.vim/plugged/nerdtree/autoload/nerdtree.vim
+070.830  000.472  000.472: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/path.vim
+071.215  000.133  000.133: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/menu_controller.vim
+071.528  000.078  000.078: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/menu_item.vim
+071.868  000.110  000.110: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/key_map.vim
+072.315  000.216  000.216: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/bookmark.vim
+072.765  000.211  000.211: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/tree_file_node.vim
+073.414  000.410  000.410: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/tree_dir_node.vim
+073.845  000.193  000.193: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/opener.vim
+074.321  000.241  000.241: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/creator.vim
+074.613  000.047  000.047: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/flag_set.vim
+074.993  000.134  000.134: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/nerdtree.vim
+075.522  000.300  000.300: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/ui.vim
+075.787  000.022  000.022: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/event.vim
+076.063  000.043  000.043: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/notifier.vim
+077.397  001.080  001.080: sourcing /Users/eason/.vim/plugged/nerdtree/autoload/nerdtree/ui_glue.vim
+080.665  000.115  000.115: sourcing /Users/eason/.vim/plugged/nerdtree/nerdtree_plugin/exec_menuitem.vim
+081.740  000.990  000.990: sourcing /Users/eason/.vim/plugged/nerdtree/nerdtree_plugin/fs_menu.vim
+081.903  000.073  000.073: sourcing /Users/eason/.vim/plugged/nerdtree/nerdtree_plugin/vcs.vim
+082.458  000.110  000.110: sourcing /Users/eason/.vim/plugged/nerdtree-git-plugin/autoload/gitstatus.vim
+083.150  000.115  000.115: sourcing /Users/eason/.vim/plugged/nerdtree-git-plugin/autoload/gitstatus/log.vim
+084.489  000.197  000.197: sourcing /Users/eason/.vim/plugged/nerdtree-git-plugin/autoload/gitstatus/listener.vim
+084.609  002.521  002.099: sourcing /Users/eason/.vim/plugged/nerdtree-git-plugin/nerdtree_plugin/git_status.vim
+085.148  015.879  008.276: sourcing /Users/eason/.vim/plugged/nerdtree/plugin/NERD_tree.vim
+085.867  000.014  000.014: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/autoloclist.vim
+085.959  000.012  000.012: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/balloons.vim
+086.085  000.015  000.015: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/checker.vim
+086.170  000.010  000.010: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/cursor.vim
+086.256  000.010  000.010: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/highlighting.vim
+086.341  000.010  000.010: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/loclist.vim
+086.433  000.013  000.013: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/modemap.vim
+086.519  000.010  000.010: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/notifiers.vim
+086.609  000.011  000.011: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/registry.vim
+086.701  000.012  000.012: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/signs.vim
+087.740  000.578  000.578: sourcing /Users/eason/.vim/plugged/syntastic/autoload/syntastic/util.vim
+096.710  000.074  000.074: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/autoloclist.vim
+096.857  000.058  000.058: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/balloons.vim
+097.114  000.192  000.192: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/checker.vim
+097.276  000.095  000.095: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/cursor.vim
+097.423  000.081  000.081: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/highlighting.vim
+097.783  000.296  000.296: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/loclist.vim
+097.932  000.085  000.085: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/modemap.vim
+098.061  000.068  000.068: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/notifiers.vim
+098.472  000.350  000.350: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/registry.vim
+098.636  000.096  000.096: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/signs.vim
+099.823  013.042  011.069: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic.vim
+100.198  000.135  000.135: sourcing /Users/eason/.vim/plugged/vim-editorconfig/plugin/editorconfig.vim
+101.566  001.191  001.191: sourcing /Users/eason/.vim/plugged/tagbar/plugin/tagbar.vim
+104.608  002.831  002.831: sourcing /Users/eason/.vim/plugged/emmet-vim/plugin/emmet.vim
+105.851  000.522  000.522: sourcing /Users/eason/.vim/plugged/vim-go/autoload/go/config.vim
+107.032  000.526  000.526: sourcing /Users/eason/.vim/plugged/vim-go/autoload/go/util.vim
+107.066  002.152  001.104: sourcing /Users/eason/.vim/plugged/vim-go/plugin/go.vim
+107.783  000.039  000.039: sourcing /Users/eason/.vim/plugged/splitjoin.vim/autoload/sj/settings.vim
+108.100  000.806  000.767: sourcing /Users/eason/.vim/plugged/splitjoin.vim/plugin/splitjoin.vim
+108.393  000.019  000.019: sourcing /Users/eason/.vim/plugged/vim-game-code-break/plugin/vim-game-code-break.vim
+110.183  000.138  000.138: sourcing /Users/eason/.vim/plugged/ale/autoload/ale/events.vim
+110.569  001.973  001.835: sourcing /Users/eason/.vim/plugged/ale/plugin/ale.vim
+110.941  000.087  000.087: sourcing /Users/eason/.vim/plugged/denite.nvim/plugin/denite.vim
+111.928  000.076  000.076: sourcing /usr/local/share/vim/vim82/plugin/getscriptPlugin.vim
+112.279  000.251  000.251: sourcing /usr/local/share/vim/vim82/plugin/gzip.vim
+112.657  000.276  000.276: sourcing /usr/local/share/vim/vim82/plugin/logiPat.vim
+112.807  000.046  000.046: sourcing /usr/local/share/vim/vim82/plugin/manpager.vim
+113.127  000.221  000.221: sourcing /usr/local/share/vim/vim82/plugin/matchparen.vim
+113.814  000.584  000.584: sourcing /usr/local/share/vim/vim82/plugin/netrwPlugin.vim
+113.949  000.016  000.016: sourcing /usr/local/share/vim/vim82/plugin/rrhelper.vim
+114.086  000.033  000.033: sourcing /usr/local/share/vim/vim82/plugin/spellfile.vim
+114.370  000.179  000.179: sourcing /usr/local/share/vim/vim82/plugin/tarPlugin.vim
+114.624  000.147  000.147: sourcing /usr/local/share/vim/vim82/plugin/tohtml.vim
+114.912  000.185  000.185: sourcing /usr/local/share/vim/vim82/plugin/vimballPlugin.vim
+115.295  000.230  000.230: sourcing /usr/local/share/vim/vim82/plugin/zipPlugin.vim
+115.309  009.752: loading plugins
+115.428  000.119: loading packages
+115.855  000.155  000.155: sourcing /Users/eason/.vim/plugged/ultisnips/after/plugin/UltiSnips_after.vim
+115.960  000.377: loading after plugins
+115.970  000.010: inits 3
+116.333  000.363: reading viminfo
+116.378  000.045: setting raw mode
+116.399  000.021: start termcap
+116.423  000.024: clearing screen
+117.192  000.476  000.476: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions.vim
+117.440  000.060  000.060: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/quickfix.vim
+117.825  000.221  000.221: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline.vim
+118.111  000.053  000.053: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/denite.vim
+118.686  000.098  000.098: sourcing /Users/eason/.vim/plugged/denite.nvim/autoload/denite/custom.vim
+119.401  000.233  000.233: sourcing /Users/eason/.vim/plugged/denite.nvim/autoload/denite/util.vim
+119.689  000.042  000.042: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/netrw.vim
+119.918  000.043  000.043: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/fzf.vim
+120.479  000.073  000.073: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/section.vim
+120.982  000.254  000.254: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/highlighter.vim
+121.356  001.160  000.833: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/term.vim
+121.726  000.109  000.109: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/hunks.vim
+121.981  000.060  000.060: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/tagbar.vim
+122.522  000.255  000.255: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/branch.vim
+122.815  000.074  000.074: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/fugitiveline.vim
+123.122  000.057  000.057: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/syntastic.vim
+123.437  000.113  000.113: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/ale.vim
+123.901  000.161  000.161: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/whitespace.vim
+124.317  000.073  000.073: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/po.vim
+124.622  000.110  000.110: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/wordcount.vim
+124.925  000.034  000.034: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/keymap.vim
+125.623  000.058  000.058: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/searchcount.vim
+137.730  000.079  000.079: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/themes.vim
+138.048  000.569  000.490: sourcing /Users/eason/.vim/plugged/vim-airline-themes/autoload/airline/themes/luna.vim
+147.413  000.326  000.326: sourcing /Users/eason/.vim/plugged/vim-airline-themes/autoload/airline/themes/luna.vim
+171.586  000.170  000.170: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/builder.vim
+172.165  000.093  000.093: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/default.vim
+201.397  000.192  000.192: sourcing /Users/eason/.vim/plugged/syntastic/autoload/syntastic/log.vim
+202.028  000.193  000.193: sourcing /Users/eason/.vim/plugged/ale/autoload/ale.vim
+202.258  080.802: opening buffers
+202.639  000.154  000.154: sourcing /Users/eason/.vim/plugged/vim-gitgutter/autoload/gitgutter.vim
+203.469  001.057: BufEnter autocommands
+203.471  000.002: editing files in windows
+203.791  000.320: VimEnter autocommands
+203.793  000.002: before starting main loop
+205.464  000.389  000.389: sourcing /Users/eason/.vim/plugged/vim-gitgutter/autoload/gitgutter/hunk.vim
+212.700  006.428  006.428: sourcing /Users/eason/.vim/plugged/vim-fugitive/autoload/fugitive.vim
+216.258  002.157  002.157: sourcing /Users/eason/.vim/plugged/tagbar/autoload/tagbar.vim
+216.707  000.058  000.058: sourcing /Users/eason/.vim/plugged/tagbar/autoload/tagbar/debug.vim
+246.237  000.383  000.383: sourcing /Users/eason/.vim/plugged/tagbar/autoload/tagbar/types/ctags.vim
+246.707  000.049  000.049: sourcing /Users/eason/.vim/plugged/tagbar/autoload/tagbar/prototypes/typeinfo.vim
+257.505  000.485  000.485: sourcing /Users/eason/.vim/plugged/ale/autoload/ale/engine.vim
+258.107  000.103  000.103: sourcing /Users/eason/.vim/plugged/ale/autoload/ale/statusline.vim
+262.059  048.214: first screen update
+262.061  000.002: --- VIM STARTED ---
+
+
+times in msec
+ clock   self+sourced   self:  sourced script
+ clock   elapsed:              other lines
+
+000.007  000.007: --- VIM STARTING ---
+000.093  000.086: Allocated generic buffers
+000.694  000.601: locale set
+000.698  000.004: clipboard setup
+000.703  000.005: window checked
+001.373  000.670: inits 1
+001.386  000.013: parsing arguments
+001.387  000.001: expanding arguments
+004.037  002.650: shell init
+004.518  000.481: Termcap init
+004.533  000.015: inits 2
+004.704  000.171: init highlight
+012.049  006.751  006.751: sourcing /usr/local/share/vim/vim82/filetype.vim
+012.271  000.068  000.068: sourcing /usr/local/share/vim/vim82/ftplugin.vim
+012.454  000.040  000.040: sourcing /usr/local/share/vim/vim82/indent.vim
+014.604  001.766  001.766: sourcing /Users/eason/.vim/autoload/plug.vim
+021.147  002.300  002.300: sourcing /usr/local/share/vim/vim82/ftoff.vim
+030.389  000.012  000.012: sourcing /Users/eason/.vim/plugged/vim-fugitive/ftdetect/fugitive.vim
+030.605  000.019  000.019: sourcing /Users/eason/.vim/plugged/ultisnips/ftdetect/snippets.vim
+030.811  000.013  000.013: sourcing /Users/eason/.vim/plugged/vim-editorconfig/ftdetect/editorconfig.vim
+030.975  000.014  000.014: sourcing /Users/eason/.vim/plugged/vim-vue/ftdetect/vue.vim
+031.096  000.017  000.017: sourcing /Users/eason/.vim/plugged/typescript-vim/ftdetect/typescript.vim
+031.218  000.016  000.016: sourcing /Users/eason/.vim/plugged/vim-jsx-typescript/ftdetect/typescript.vim
+031.490  000.168  000.168: sourcing /Users/eason/.vim/plugged/vim-go/ftdetect/gofiletype.vim
+031.660  000.032  000.032: sourcing /Users/eason/.vim/plugged/vim-toml/ftdetect/toml.vim
+031.804  000.035  000.035: sourcing /Users/eason/.vim/plugged/nginx.vim/ftdetect/nginx.vim
+032.024  008.151  007.825: sourcing /usr/local/share/vim/vim82/filetype.vim
+032.483  000.017  000.017: sourcing /usr/local/share/vim/vim82/ftplugin.vim
+032.944  000.012  000.012: sourcing /usr/local/share/vim/vim82/indent.vim
+037.286  002.878  002.878: sourcing /usr/local/share/vim/vim82/colors/lists/default.vim
+037.514  003.585  000.707: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+037.664  004.146  000.561: sourcing /usr/local/share/vim/vim82/syntax/synload.vim
+037.762  004.666  000.520: sourcing /usr/local/share/vim/vim82/syntax/syntax.vim
+038.740  000.272  000.272: sourcing /usr/local/Cellar/vim/8.2.5150_1/share/vim/vim82/syntax/nosyntax.vim
+039.793  000.163  000.163: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+039.947  000.766  000.603: sourcing /usr/local/share/vim/vim82/syntax/synload.vim
+040.031  001.665  000.627: sourcing /usr/local/share/vim/vim82/syntax/syntax.vim
+040.156  000.013  000.013: sourcing /Users/eason/.vim/setup/denite.vim
+042.254  001.623  001.623: sourcing /usr/local/share/vim/vim82/colors/lists/default.vim
+043.308  000.146  000.146: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+044.004  000.142  000.142: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+044.653  000.142  000.142: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+045.727  003.032  002.602: sourcing /Users/eason/.vim/plugged/vim-snazzy/colors/snazzy.vim
+047.722  001.576  001.576: sourcing /usr/local/share/vim/vim82/colors/lists/default.vim
+049.087  000.144  000.144: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+049.728  000.142  000.142: sourcing /usr/local/share/vim/vim82/syntax/syncolor.vim
+051.799  003.908  003.622: sourcing /Users/eason/.vim/plugged/vim-colors-solarized/colors/solarized.vim
+052.149  047.064  011.476: sourcing $HOME/.vimrc
+052.154  000.386: sourcing vimrc file(s)
+052.875  000.132  000.132: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/init.vim
+053.852  000.603  000.603: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/parts.vim
+054.088  000.015  000.015: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/formatter/short_path.vim
+055.381  000.226  000.226: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/util.vim
+055.477  003.037  002.061: sourcing /Users/eason/.vim/plugged/vim-airline/plugin/airline.vim
+055.727  000.036  000.036: sourcing /Users/eason/.vim/plugged/vim-airline-themes/plugin/airline-themes.vim
+056.574  000.677  000.677: sourcing /Users/eason/.fzf/plugin/fzf.vim
+057.595  000.856  000.856: sourcing /Users/eason/.vim/plugged/fzf.vim/plugin/fzf.vim
+057.945  000.174  000.174: sourcing /Users/eason/.vim/plugged/vim-easy-align/plugin/easy_align.vim
+059.365  001.263  001.263: sourcing /Users/eason/.vim/plugged/vim-fugitive/plugin/fugitive.vim
+060.017  000.478  000.478: sourcing /Users/eason/.vim/plugged/vim-surround/plugin/surround.vim
+060.640  000.176  000.176: sourcing /Users/eason/.vim/plugged/vim-gitgutter/autoload/gitgutter/utility.vim
+061.242  000.154  000.154: sourcing /Users/eason/.vim/plugged/vim-gitgutter/autoload/gitgutter/highlight.vim
+062.683  002.503  002.173: sourcing /Users/eason/.vim/plugged/vim-gitgutter/plugin/gitgutter.vim
+062.878  000.013  000.013: sourcing /Users/eason/.vim/plugged/vim-tmux-focus-events/plugin/tmux_focus_events.vim
+063.210  000.176  000.176: sourcing /Users/eason/.vim/plugged/vim-commentary/plugin/commentary.vim
+064.235  000.865  000.865: sourcing /Users/eason/.vim/plugged/supertab/plugin/supertab.vim
+064.826  000.090  000.090: sourcing /Users/eason/.vim/plugged/ultisnips/autoload/UltiSnips/map_keys.vim
+064.913  000.505  000.415: sourcing /Users/eason/.vim/plugged/ultisnips/plugin/UltiSnips.vim
+065.119  000.040  000.040: sourcing /Users/eason/.vim/plugged/vim-snippets/plugin/vimsnippets.vim
+065.311  000.022  000.022: sourcing /Users/eason/.vim/plugged/git-blame.vim/plugin/gitblame.vim
+066.017  000.196  000.196: sourcing /Users/eason/.vim/plugged/nerdtree/autoload/nerdtree.vim
+066.887  000.452  000.452: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/path.vim
+067.239  000.125  000.125: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/menu_controller.vim
+067.533  000.075  000.075: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/menu_item.vim
+067.853  000.104  000.104: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/key_map.vim
+068.279  000.210  000.210: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/bookmark.vim
+068.703  000.201  000.201: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/tree_file_node.vim
+069.316  000.389  000.389: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/tree_dir_node.vim
+069.713  000.180  000.180: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/opener.vim
+070.154  000.223  000.223: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/creator.vim
+070.419  000.046  000.046: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/flag_set.vim
+070.766  000.131  000.131: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/nerdtree.vim
+071.261  000.282  000.282: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/ui.vim
+071.500  000.021  000.021: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/event.vim
+071.752  000.035  000.035: sourcing /Users/eason/.vim/plugged/nerdtree/lib/nerdtree/notifier.vim
+072.790  000.808  000.808: sourcing /Users/eason/.vim/plugged/nerdtree/autoload/nerdtree/ui_glue.vim
+075.882  000.107  000.107: sourcing /Users/eason/.vim/plugged/nerdtree/nerdtree_plugin/exec_menuitem.vim
+076.891  000.929  000.929: sourcing /Users/eason/.vim/plugged/nerdtree/nerdtree_plugin/fs_menu.vim
+077.043  000.072  000.072: sourcing /Users/eason/.vim/plugged/nerdtree/nerdtree_plugin/vcs.vim
+077.568  000.105  000.105: sourcing /Users/eason/.vim/plugged/nerdtree-git-plugin/autoload/gitstatus.vim
+078.227  000.108  000.108: sourcing /Users/eason/.vim/plugged/nerdtree-git-plugin/autoload/gitstatus/log.vim
+079.391  000.187  000.187: sourcing /Users/eason/.vim/plugged/nerdtree-git-plugin/autoload/gitstatus/listener.vim
+079.509  002.296  001.896: sourcing /Users/eason/.vim/plugged/nerdtree-git-plugin/nerdtree_plugin/git_status.vim
+080.019  014.551  007.669: sourcing /Users/eason/.vim/plugged/nerdtree/plugin/NERD_tree.vim
+080.817  000.014  000.014: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/autoloclist.vim
+080.906  000.011  000.011: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/balloons.vim
+081.015  000.012  000.012: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/checker.vim
+081.099  000.011  000.011: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/cursor.vim
+081.185  000.014  000.014: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/highlighting.vim
+081.270  000.010  000.010: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/loclist.vim
+081.355  000.011  000.011: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/modemap.vim
+081.448  000.011  000.011: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/notifiers.vim
+081.539  000.013  000.013: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/registry.vim
+081.658  000.011  000.011: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/signs.vim
+083.043  000.643  000.643: sourcing /Users/eason/.vim/plugged/syntastic/autoload/syntastic/util.vim
+093.249  000.086  000.086: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/autoloclist.vim
+093.396  000.064  000.064: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/balloons.vim
+093.682  000.212  000.212: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/checker.vim
+093.872  000.109  000.109: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/cursor.vim
+094.039  000.091  000.091: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/highlighting.vim
+094.451  000.341  000.341: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/loclist.vim
+094.619  000.093  000.093: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/modemap.vim
+094.787  000.075  000.075: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/notifiers.vim
+095.237  000.382  000.382: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/registry.vim
+095.420  000.106  000.106: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic/signs.vim
+096.707  014.910  012.708: sourcing /Users/eason/.vim/plugged/syntastic/plugin/syntastic.vim
+097.119  000.133  000.133: sourcing /Users/eason/.vim/plugged/vim-editorconfig/plugin/editorconfig.vim
+098.646  001.315  001.315: sourcing /Users/eason/.vim/plugged/tagbar/plugin/tagbar.vim
+101.687  002.819  002.819: sourcing /Users/eason/.vim/plugged/emmet-vim/plugin/emmet.vim
+102.962  000.548  000.548: sourcing /Users/eason/.vim/plugged/vim-go/autoload/go/config.vim
+104.155  000.525  000.525: sourcing /Users/eason/.vim/plugged/vim-go/autoload/go/util.vim
+104.190  002.211  001.138: sourcing /Users/eason/.vim/plugged/vim-go/plugin/go.vim
+104.855  000.036  000.036: sourcing /Users/eason/.vim/plugged/splitjoin.vim/autoload/sj/settings.vim
+105.145  000.745  000.709: sourcing /Users/eason/.vim/plugged/splitjoin.vim/plugin/splitjoin.vim
+105.414  000.017  000.017: sourcing /Users/eason/.vim/plugged/vim-game-code-break/plugin/vim-game-code-break.vim
+106.965  000.120  000.120: sourcing /Users/eason/.vim/plugged/ale/autoload/ale/events.vim
+107.199  001.583  001.463: sourcing /Users/eason/.vim/plugged/ale/plugin/ale.vim
+107.513  000.089  000.089: sourcing /Users/eason/.vim/plugged/denite.nvim/plugin/denite.vim
+108.328  000.064  000.064: sourcing /usr/local/share/vim/vim82/plugin/getscriptPlugin.vim
+108.635  000.228  000.228: sourcing /usr/local/share/vim/vim82/plugin/gzip.vim
+108.955  000.236  000.236: sourcing /usr/local/share/vim/vim82/plugin/logiPat.vim
+109.075  000.037  000.037: sourcing /usr/local/share/vim/vim82/plugin/manpager.vim
+109.350  000.192  000.192: sourcing /usr/local/share/vim/vim82/plugin/matchparen.vim
+109.943  000.509  000.509: sourcing /usr/local/share/vim/vim82/plugin/netrwPlugin.vim
+110.051  000.013  000.013: sourcing /usr/local/share/vim/vim82/plugin/rrhelper.vim
+110.161  000.027  000.027: sourcing /usr/local/share/vim/vim82/plugin/spellfile.vim
+110.390  000.150  000.150: sourcing /usr/local/share/vim/vim82/plugin/tarPlugin.vim
+110.596  000.122  000.122: sourcing /usr/local/share/vim/vim82/plugin/tohtml.vim
+110.839  000.158  000.158: sourcing /usr/local/share/vim/vim82/plugin/vimballPlugin.vim
+111.149  000.190  000.190: sourcing /usr/local/share/vim/vim82/plugin/zipPlugin.vim
+111.159  007.943: loading plugins
+111.257  000.098: loading packages
+111.624  000.154  000.154: sourcing /Users/eason/.vim/plugged/ultisnips/after/plugin/UltiSnips_after.vim
+111.714  000.303: loading after plugins
+111.722  000.008: inits 3
+112.036  000.314: reading viminfo
+112.072  000.036: setting raw mode
+112.090  000.018: start termcap
+112.117  000.027: clearing screen
+112.814  000.451  000.451: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions.vim
+113.024  000.053  000.053: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/quickfix.vim
+113.348  000.186  000.186: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline.vim
+113.596  000.047  000.047: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/denite.vim
+114.087  000.089  000.089: sourcing /Users/eason/.vim/plugged/denite.nvim/autoload/denite/custom.vim
+114.728  000.218  000.218: sourcing /Users/eason/.vim/plugged/denite.nvim/autoload/denite/util.vim
+114.987  000.035  000.035: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/netrw.vim
+115.195  000.043  000.043: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/fzf.vim
+115.695  000.068  000.068: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/section.vim
+116.154  000.238  000.238: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/highlighter.vim
+116.551  001.104  000.798: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/term.vim
+116.932  000.102  000.102: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/hunks.vim
+117.164  000.057  000.057: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/tagbar.vim
+117.663  000.240  000.240: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/branch.vim
+117.936  000.071  000.071: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/fugitiveline.vim
+118.209  000.048  000.048: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/syntastic.vim
+118.498  000.106  000.106: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/ale.vim
+118.926  000.144  000.144: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/whitespace.vim
+119.313  000.068  000.068: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/po.vim
+119.581  000.100  000.100: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/wordcount.vim
+119.860  000.033  000.033: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/keymap.vim
+120.481  000.052  000.052: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/searchcount.vim
+131.114  000.079  000.079: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/themes.vim
+131.431  000.554  000.475: sourcing /Users/eason/.vim/plugged/vim-airline-themes/autoload/airline/themes/luna.vim
+140.129  000.331  000.331: sourcing /Users/eason/.vim/plugged/vim-airline-themes/autoload/airline/themes/luna.vim
+162.072  000.161  000.161: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/builder.vim
+162.617  000.093  000.093: sourcing /Users/eason/.vim/plugged/vim-airline/autoload/airline/extensions/default.vim
+191.442  000.193  000.193: sourcing /Users/eason/.vim/plugged/syntastic/autoload/syntastic/log.vim
+192.075  000.199  000.199: sourcing /Users/eason/.vim/plugged/ale/autoload/ale.vim
+192.300  075.405: opening buffers
+192.690  000.161  000.161: sourcing /Users/eason/.vim/plugged/vim-gitgutter/autoload/gitgutter.vim
+193.532  001.071: BufEnter autocommands
+193.535  000.003: editing files in windows
+193.795  000.260: VimEnter autocommands
+193.797  000.002: before starting main loop
+195.500  000.397  000.397: sourcing /Users/eason/.vim/plugged/vim-gitgutter/autoload/gitgutter/hunk.vim
+202.662  006.345  006.345: sourcing /Users/eason/.vim/plugged/vim-fugitive/autoload/fugitive.vim
+206.639  002.419  002.419: sourcing /Users/eason/.vim/plugged/tagbar/autoload/tagbar.vim
+207.162  000.063  000.063: sourcing /Users/eason/.vim/plugged/tagbar/autoload/tagbar/debug.vim
+236.439  000.381  000.381: sourcing /Users/eason/.vim/plugged/tagbar/autoload/tagbar/types/ctags.vim
+236.900  000.050  000.050: sourcing /Users/eason/.vim/plugged/tagbar/autoload/tagbar/prototypes/typeinfo.vim
+247.295  000.482  000.482: sourcing /Users/eason/.vim/plugged/ale/autoload/ale/engine.vim
+247.894  000.101  000.101: sourcing /Users/eason/.vim/plugged/ale/autoload/ale/statusline.vim
+251.759  047.724: first screen update
+251.760  000.001: --- VIM STARTED ---
