@@ -1,14 +1,7 @@
-*.a
-*.so
 *.out
-*.o
-tags
-*.in
-*.out
-lib
+*.dat
 build
 .vscode
-xcode
-__pycache__
-cmake-build-debug
 .idea
+*.out.*
+

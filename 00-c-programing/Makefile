@@ -7,7 +7,7 @@ PROGS = $(patsubst %.c, %, $(SRCS))
 all: $(PROGS)
 
 %:%.c
-	$(CC) -o $@ $^
+	$(CC) -Wall -O2 -o $@.out $^
 
 .PHONY:clean
 
