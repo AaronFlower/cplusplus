@@ -9,6 +9,7 @@
 	- [Implicit Static B-trees](https://algorithmica.org/en/b-tree)
 [Eli Bendersky's website](https://eli.thegreenplace.net/)
 [Erik Rigtorp](https://rigtorp.se/)
+[Fibers, Oh My!](https://graphitemaster.github.io/fibers/)
 [Game Programming Patterns](https://gameprogrammingpatterns.com/)
 [Jeff Preshing on Programming](https://preshing.com/)
 
