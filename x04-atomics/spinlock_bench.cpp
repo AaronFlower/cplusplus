@@ -1,6 +1,8 @@
+#include "semaphore.h"
 #include <atomic>
 #include <chrono>
 #include <iostream>
+#include <mutex>
 
 struct alignas(64) tas_spinlock {
   std::atomic<bool> lock_{false};
@@ -22,7 +24,7 @@ struct alignas(64) ttas_spinlock {
         break;
       }
       while (lock_.load(std::memory_order_relaxed))
-        ;
+	__builtin_ia32_pause();
     }
   }
 
@@ -31,10 +33,12 @@ struct alignas(64) ttas_spinlock {
 
 tas_spinlock tas_clk;
 ttas_spinlock ttas_clk;
+std::mutex m_clk;
+LightweightMutex lw_clk;
 
 int count = 0;
 
-#define N 10000
+#define N 100000
 
 template <typename Lock> void *run_task(void *arg) {
   Lock *clk = static_cast<Lock *>(arg);
@@ -45,7 +49,7 @@ template <typename Lock> void *run_task(void *arg) {
   return nullptr;
 }
 
-template <typename Lock> int test_lock(int n_worker, Lock *clk) {
+template <typename Lock> int test_lock(int n_worker, Lock *clk, const char* name) {
   auto begin = std::chrono::steady_clock::now();
   pthread_t tids[n_worker];
 
@@ -60,7 +64,7 @@ template <typename Lock> int test_lock(int n_worker, Lock *clk) {
 
   auto cost = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
 
-  std::cout << "count = " << count << " cost_ns " << cost.count() << " per "
+  std::cout << name << " count = " << count << " cost_ns " << cost.count() << " per "
             << cost.count() / (n_worker * N) << std::endl;
   return 0;
 }
@@ -77,14 +81,16 @@ int main(int argc, char **argv) {
 
   switch (option) {
   case 0:
-    test_lock<tas_spinlock>(n_worker, &tas_clk);
+    test_lock<tas_spinlock>(n_worker, &tas_clk, "TAS");
     break;
   case 1:
-    test_lock<ttas_spinlock>(n_worker, &ttas_clk);
+    test_lock<ttas_spinlock>(n_worker, &ttas_clk, "TTAS");
     break;
   case 2:
-    test_lock<tas_spinlock>(n_worker, &tas_clk);
-    test_lock<ttas_spinlock>(n_worker, &ttas_clk);
+    test_lock<tas_spinlock>(n_worker, &tas_clk, "TAS");
+    test_lock<ttas_spinlock>(n_worker, &ttas_clk, "TTAS");
+    test_lock<std::mutex>(n_worker, &m_clk, "MUTEX");
+    test_lock<LightweightMutex>(n_worker, &lw_clk, "LIGHT");
     break;
   default:
     std::cout << "Please use option 0, 1, 2" << std::endl;
