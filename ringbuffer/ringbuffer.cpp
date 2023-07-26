@@ -41,6 +41,49 @@ struct RingBuffer {
   std::vector<int> data_;
 };
 
+struct RingBuffer2 {
+  RingBuffer2(size_t cap) : data_(cap, 0) {}
+
+  bool push(int n) {
+    int w_index = w_index_.load(std::memory_order_relaxed);
+    int next = w_index + 1;
+    next = (next != data_.size()) * next;
+    if (next == r_index_cache_) {
+      r_index_cache_ = r_index_.load(std::memory_order_acquire);
+      if (next == r_index_cache_) {
+        return false;
+      }
+    }
+
+    data_[w_index] = n;
+    w_index_.store(next, std::memory_order_release);
+    return true;
+  }
+
+  bool pop(int &n) {
+    int r_index = r_index_.load(std::memory_order_relaxed);
+    if (r_index == w_index_cache_) {
+      w_index_cache_ = w_index_.load(std::memory_order_acquire);
+
+      if (r_index == w_index_cache_) {
+        return false;
+      }
+    }
+
+    int next = r_index + 1;
+    next = (next != data_.size()) * next;
+    n = data_[r_index];
+    r_index_.store(next, std::memory_order_release);
+    return true;
+  }
+
+  alignas(64) std::atomic<int> w_index_{0};
+  size_t w_index_cache_{0};
+  alignas(64) std::atomic<int> r_index_{0};
+  size_t r_index_cache_{0};
+  std::vector<int> data_;
+};
+
 template <typename T> void simple_test() {
   T rb(4);
   assert(rb.push(0));
@@ -128,5 +171,8 @@ int main(int argc, char *argv[]) {
   simple_test<RingBuffer>();
 
   bench<RingBuffer>(cpu1, cpu2);
+
+  simple_test<RingBuffer2>();
+  bench<RingBuffer2>(cpu1, cpu2);
   return 0;
 }
