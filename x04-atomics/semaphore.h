@@ -1,6 +1,7 @@
 #include <atomic>
 #include <cassert>
 #include <semaphore.h>
+#include <cerrno>
 
 class Semaphore
 {

@@ -3,6 +3,7 @@
 #include <chrono>
 #include <iostream>
 #include <mutex>
+#include <bthread/mutex.h>
 
 struct alignas(64) tas_spinlock {
   std::atomic<bool> lock_{false};
@@ -69,6 +70,8 @@ template <typename Lock> int test_lock(int n_worker, Lock *clk, const char* name
   return 0;
 }
 
+bthread::Mutex b_clk;
+
 int main(int argc, char **argv) {
   int n_worker = 4, option = 2;
 
@@ -91,6 +94,7 @@ int main(int argc, char **argv) {
     test_lock<ttas_spinlock>(n_worker, &ttas_clk, "TTAS");
     test_lock<std::mutex>(n_worker, &m_clk, "MUTEX");
     test_lock<LightweightMutex>(n_worker, &lw_clk, "LIGHT");
+    test_lock<bthread::Mutex>(n_worker, &b_clk, "BMUTEX");
     break;
   default:
     std::cout << "Please use option 0, 1, 2" << std::endl;

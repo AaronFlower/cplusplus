@@ -10,6 +10,9 @@ g++ -O2 -std=c++11 -Wall -fsanitize=thread linked_list.cpp
 
 ```bash
 ❯ g++ -O2 -std=c++11 spinlock_bench.cpp && ./a.out
+
+>  g++ -O2 -std=c++11 -Wall spinlock_bench.cpp -I../../cassini/third/include -lpthread -L ../../cassini/third/lib -lbrpc -lgflags -lssl -lcrypto -lprotobuf -ldl
+
 count = 40000 cost_ns 4221990 per 105
 count = 80000 cost_ns 2575314 per 64
 
@@ -29,6 +32,7 @@ count = 80000 cost_ns 7398635 per 92
 It is interesting that butex is the best, but its cache misses is higher that ttas. It has lower bus-cycles.
 
 For now, I cannot understand why.
+
 
 ```
 $ perf stat -e cache-misses,bus-cycles,L1-dcache-loads,L1-dcache-load-misses  ./spin_bench 16 3
