@@ -105,6 +105,74 @@ std::array<BinarySearcher, 4> binary_searchers{
     binary_search<int>, binary_search_v1<int>, binary_search_v2<int>,
     binary_search_v3<int>};
 
+struct zpair {
+  int idx = -1;
+  int val = -1;
+};
+
+class Eytzinger {
+public:
+  static constexpr int block_size = 64 / sizeof(zpair);
+
+  struct zpair {
+    int val = -1;
+    int idx = -1;
+  };
+
+  Eytzinger(const std::vector<int> &vec) : z_(vec.size() + 1) {
+    build_(vec, 0, 1);
+  }
+
+  int search(int target) {
+    auto zp = search_(target);
+    return (zp.val == target) ? zp.idx : -1;
+  }
+
+private:
+  int build_(const std::vector<int> &vec, int i, int k) {
+    if (k <= vec.size()) {
+      i = build_(vec, i, k << 1);
+      z_[k].idx = i;
+      z_[k].val = vec[i++];
+      i = build_(vec, i, (k << 1) + 1);
+    }
+
+    return i;
+  }
+
+  inline zpair search_(int target) {
+    int k = 1;
+    while (k < z_.size()) {
+      __builtin_prefetch(z_.data() + k * block_size);
+      k = (k << 1) + (z_[k].val < target);
+    }
+    k >>= __builtin_ffs(~k);
+    return z_[k];
+  }
+
+private:
+  alignas(64) std::vector<zpair> z_;
+};
+
+static void BM_eytzinger_binary_search(benchmark::State &state) {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  auto len = state.range(0);
+  std::uniform_int_distribution<int> dist(-1024, len << 1);
+  std::vector<int> arr(state.range(0));
+  std::iota(arr.begin(), arr.end(), 0);
+  Eytzinger earr(arr);
+
+  int sum = 0;
+  for (auto _ : state) {
+    int x = dist(gen);
+    sum += earr.search(x);
+  }
+  benchmark::DoNotOptimize(sum);
+}
+
+BENCHMARK(BM_eytzinger_binary_search)->RangeMultiplier(2)->Range(2, 1 << 30);
+
 static void BM_binary_search(benchmark::State &state) {
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -123,38 +191,56 @@ static void BM_binary_search(benchmark::State &state) {
 }
 
 BENCHMARK(BM_binary_search)
+    ->ArgsProduct({benchmark::CreateDenseRange(0, 3, /*step*/ 1),
+                   benchmark::CreateRange(2, 1 << 30, /*multi=*/2)});
+
+/*
+BENCHMARK(BM_binary_search)
+    ->Args({0, 1 << 2})
+    ->Args({0, 1 << 4})
     ->Args({0, 1 << 8})
     ->Args({0, 1 << 12})
     ->Args({0, 1 << 16})
     ->Args({0, 1 << 22})
     ->Args({0, 1 << 26})
+    ->Args({1, 1 << 2})
+    ->Args({1, 1 << 4})
     ->Args({1, 1 << 8})
     ->Args({1, 1 << 12})
     ->Args({1, 1 << 16})
     ->Args({1, 1 << 22})
     ->Args({1, 1 << 26})
+    ->Args({2, 1 << 2})
+    ->Args({2, 1 << 4})
     ->Args({2, 1 << 8})
     ->Args({2, 1 << 12})
     ->Args({2, 1 << 16})
     ->Args({2, 1 << 22})
     ->Args({2, 1 << 26})
+    ->Args({3, 1 << 2})
+    ->Args({3, 1 << 4})
     ->Args({3, 1 << 8})
     ->Args({3, 1 << 12})
     ->Args({3, 1 << 16})
     ->Args({3, 1 << 22})
     ->Args({3, 1 << 26});
+                */
 
 int main(int argc, char **argv) {
   auto arr = create_array<int, (1 << 5)>();
-  std::cout << arr.size() << std::endl;
   std::vector<int> nums{1, 3, 5, 7, 9, 10};
+  Eytzinger earr(nums);
 
   for (int i = -1; i < 13; ++i) {
     int a = binary_search(nums.data(), nums.size(), i);
     int b = binary_search_v1(nums.data(), nums.size(), i);
     int c = binary_search_v2(nums.data(), nums.size(), i);
     int d = binary_search_v3(nums.data(), nums.size(), i);
-    assert(a == b && b == c && c == d);
+    int e = earr.search(i);
+    assert(a == b);
+    assert(b == c);
+    assert(c == d);
+    assert(d == e);
   }
 
   benchmark::Initialize(&argc, argv);
